@@ -91,91 +91,84 @@ export default function NearbyPage() {
   );
 
   
-  // CALCULATE DISTANCE
-  
-  const calculateDistance = (
-    lat1: number,
-    lon1: number,
-    lat2: number,
-    lon2: number
-  ) => {
-    const R = 6371;
+useEffect(() => {
+    let watchId: number | null = null;
+    let locationGrantedAlerted = false;
 
-    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const calculateDistance = (
+      lat1: number,
+      lon1: number,
+      lat2: number,
+      lon2: number
+    ) => {
+      const R = 6371;
 
-    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+      const dLat = ((lat2 - lat1) * Math.PI) / 180;
 
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos((lat1 * Math.PI) / 180) *
-        Math.cos((lat2 * Math.PI) / 180) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
+      const dLon = ((lon2 - lon1) * Math.PI) / 180;
 
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos((lat1 * Math.PI) / 180) *
+          Math.cos((lat2 * Math.PI) / 180) *
+          Math.sin(dLon / 2) *
+          Math.sin(dLon / 2);
 
-    return R * c;
-  };
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-
-  // AUTO OPEN/CLOSE DETECTION
-  
-  const checkRestaurantStatus = (
-    openTime: string,
-    closeTime: string
-  ) => {
-    const now = new Date();
-
-    const convertTo24Hour = (time: string) => {
-      const [hourMinute, modifier] = time.split(" ");
-      const [hourStr, minuteStr] = hourMinute.split(":");
-      let hours = Number(hourStr);
-      const minutes = Number(minuteStr);
-
-      if (modifier === "PM" && hours !== 12) {
-        hours += 12;
-      }
-
-      if (modifier === "AM" && hours === 12) {
-        hours = 0;
-      }
-
-      return { hours, minutes };
+      return R * c;
     };
 
-    const open = convertTo24Hour(openTime);
-    const close = convertTo24Hour(closeTime);
+    const checkRestaurantStatus = (
+      openTime: string,
+      closeTime: string
+    ) => {
+      const now = new Date();
 
-    const openDate = new Date();
-    openDate.setHours(open.hours, open.minutes, 0);
+      const convertTo24Hour = (time: string) => {
+        const [hourMinute, modifier] = time.split(" ");
+        const [hourStr, minuteStr] = hourMinute.split(":");
+        let hours = Number(hourStr);
+        const minutes = Number(minuteStr);
 
-    const closeDate = new Date();
-    closeDate.setHours(close.hours, close.minutes, 0);
+        if (modifier === "PM" && hours !== 12) {
+          hours += 12;
+        }
 
-    // HANDLE MIDNIGHT
-    if (close.hours < open.hours) {
-      closeDate.setDate(closeDate.getDate() + 1);
-    }
+        if (modifier === "AM" && hours === 12) {
+          hours = 0;
+        }
 
-    return now >= openDate && now <= closeDate
-      ? "Open"
-      : "Closed";
-  };
+        return { hours, minutes };
+      };
 
-  
-  // PUSH NOTIFICATION
-  
-  const sendNotification = (title: string, body: string) => {
-    if (Notification.permission === "granted") {
-      new Notification(title, {
-        body,
-        icon: "/favicon.ico",
-      });
-    }
-  };
+      const open = convertTo24Hour(openTime);
+      const close = convertTo24Hour(closeTime);
 
-  useEffect(() => {
-    let watchId: number | null = null;
+      const openDate = new Date();
+      openDate.setHours(open.hours, open.minutes, 0);
+
+      const closeDate = new Date();
+      closeDate.setHours(close.hours, close.minutes, 0);
+
+      // HANDLE MIDNIGHT
+      if (close.hours < open.hours) {
+        closeDate.setDate(closeDate.getDate() + 1);
+      }
+
+      return now >= openDate && now <= closeDate
+        ? "Open"
+        : "Closed";
+    };
+
+    const sendNotification = (title: string, body: string) => {
+      if (Notification.permission === "granted") {
+        new Notification(title, {
+          body,
+          icon: "/favicon.ico",
+        });
+      }
+    };
 
     const initLocation = async () => {
       // REQUEST NOTIFICATION PERMISSION
@@ -208,8 +201,9 @@ export default function NearbyPage() {
 
       watchId = navigator.geolocation.watchPosition(
         async (position) => {
-          if (!locationAllowed) {
+          if (!locationGrantedAlerted) {
             alert("Location access granted. Loading restaurants.");
+            locationGrantedAlerted = true;
           }
 
           setLocationAllowed(true);
