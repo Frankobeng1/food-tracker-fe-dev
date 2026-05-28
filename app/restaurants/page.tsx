@@ -11,6 +11,7 @@ import {
   FaWhatsapp,
   FaMotorcycle,
   FaDirections,
+  FaUtensils,
 } from "react-icons/fa";
 
 // AUTO OPEN/CLOSE DETECTION
@@ -21,7 +22,8 @@ const getRestaurantStatus = (
   const now = new Date();
 
   const convertTo24Hour = (time: string) => {
-    const [hourMinute, modifier] = time.split(" ");
+    const [hourMinute, modifier] =
+      time.split(" ");
 
     const [hourStr, minuteStr] =
       hourMinute.split(":");
@@ -30,20 +32,28 @@ const getRestaurantStatus = (
 
     const minutes = Number(minuteStr);
 
-    if (modifier === "PM" && hours !== 12) {
+    if (
+      modifier === "PM" &&
+      hours !== 12
+    ) {
       hours += 12;
     }
 
-    if (modifier === "AM" && hours === 12) {
+    if (
+      modifier === "AM" &&
+      hours === 12
+    ) {
       hours = 0;
     }
 
     return { hours, minutes };
   };
 
-  const open = convertTo24Hour(openTime);
+  const open =
+    convertTo24Hour(openTime);
 
-  const close = convertTo24Hour(closeTime);
+  const close =
+    convertTo24Hour(closeTime);
 
   const openDate = new Date(now);
 
@@ -76,6 +86,7 @@ const getRestaurantStatus = (
     : "Closed";
 };
 
+// RESTAURANTS
 const restaurants = [
   {
     id: 1,
@@ -101,6 +112,28 @@ const restaurants = [
 
     image:
       "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1200",
+
+    menu: [
+      {
+        name: "Jollof Rice",
+        price: "GH₵ 45",
+      },
+
+      {
+        name: "Banku & Tilapia",
+        price: "GH₵ 70",
+      },
+
+      {
+        name: "Fried Rice Chicken",
+        price: "GH₵ 55",
+      },
+
+      {
+        name: "Pizza",
+        price: "GH₵ 80",
+      },
+    ],
   },
 
   {
@@ -127,6 +160,28 @@ const restaurants = [
 
     image:
       "https://images.unsplash.com/photo-1552566626-52f8b828add9?q=80&w=1200",
+
+    menu: [
+      {
+        name: "Fufu & Light Soup",
+        price: "GH₵ 50",
+      },
+
+      {
+        name: "Ampesi",
+        price: "GH₵ 35",
+      },
+
+      {
+        name: "Waakye",
+        price: "GH₵ 30",
+      },
+
+      {
+        name: "Banku & Okro",
+        price: "GH₵ 45",
+      },
+    ],
   },
 
   {
@@ -153,6 +208,28 @@ const restaurants = [
 
     image:
       "https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=1200",
+
+    menu: [
+      {
+        name: "Burger & Fries",
+        price: "GH₵ 60",
+      },
+
+      {
+        name: "Chicken Wings",
+        price: "GH₵ 55",
+      },
+
+      {
+        name: "Pasta",
+        price: "GH₵ 70",
+      },
+
+      {
+        name: "Ice Cream",
+        price: "GH₵ 25",
+      },
+    ],
   },
 
   {
@@ -179,36 +256,75 @@ const restaurants = [
 
     image:
       "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1200",
+
+    menu: [
+      {
+        name: "Shawarma",
+        price: "GH₵ 40",
+      },
+
+      {
+        name: "Fried Rice",
+        price: "GH₵ 50",
+      },
+
+      {
+        name: "Chicken Pizza",
+        price: "GH₵ 90",
+      },
+
+      {
+        name: "Smoothie",
+        price: "GH₵ 20",
+      },
+    ],
   },
 ];
 
-type Restaurant = (typeof restaurants)[number] & {
-  status?: string;
-};
+type Restaurant =
+  (typeof restaurants)[number] & {
+    status?: string;
+  };
 
 export default function RestaurantsPage() {
-  const [selectedRestaurant, setSelectedRestaurant] =
-    useState<Restaurant | null>(null);
+  const [
+    selectedRestaurant,
+    setSelectedRestaurant,
+  ] = useState<Restaurant | null>(
+    null
+  );
 
-  const [restaurantData, setRestaurantData] =
-    useState<Restaurant[]>([]);
+  const [
+    showMenu,
+    setShowMenu,
+  ] = useState(false);
+
+  const [
+    restaurantData,
+    setRestaurantData,
+  ] = useState<Restaurant[]>([]);
 
   // AUTO UPDATE OPEN/CLOSE STATUS
   useEffect(() => {
-    const updateRestaurantStatus = () => {
-      const updatedRestaurants =
-        restaurants.map((restaurant) => ({
-          ...restaurant,
+    const updateRestaurantStatus =
+      () => {
+        const updatedRestaurants =
+          restaurants.map(
+            (restaurant) => ({
+              ...restaurant,
 
-          status:
-            getRestaurantStatus(
-              restaurant.openTime,
-              restaurant.closeTime
-            ),
-        }));
+              status:
+                getRestaurantStatus(
+                  restaurant.openTime,
+                  restaurant.closeTime
+                ),
+            })
+          );
 
-      setRestaurantData(updatedRestaurants);
-    };
+        setRestaurantData(
+          updatedRestaurants
+        );
+      };
 
     // RUN IMMEDIATELY
     updateRestaurantStatus();
@@ -238,7 +354,9 @@ export default function RestaurantsPage() {
           </h1>
 
           <p className="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto leading-8">
-            Explore amazing restaurants around Sunyani.
+            Explore amazing
+            restaurants around
+            Sunyani.
           </p>
 
         </section>
@@ -274,7 +392,9 @@ export default function RestaurantsPage() {
                 <div className="p-6">
 
                   <h2 className="text-xl sm:text-2xl font-bold mb-4">
-                    {restaurant.name}
+                    {
+                      restaurant.name
+                    }
                   </h2>
 
                   <div className="space-y-3 mb-6">
@@ -304,16 +424,44 @@ export default function RestaurantsPage() {
 
                   </div>
 
-                  <button
-                    onClick={() =>
-                      setSelectedRestaurant(
-                        restaurant
-                      )
-                    }
-                    className="w-full bg-orange-500 hover:bg-orange-600 transition duration-300 py-3 rounded-2xl text-sm font-semibold"
-                  >
-                    View Restaurant
-                  </button>
+                  {/* BUTTONS */}
+                  <div className="flex flex-col gap-3">
+
+                    <button
+                      onClick={() => {
+                        setSelectedRestaurant(
+                          restaurant
+                        );
+
+                        setShowMenu(
+                          false
+                        );
+                      }}
+                      className="w-full bg-orange-500 hover:bg-orange-600 transition duration-300 py-3 rounded-2xl text-sm font-semibold"
+                    >
+                      View Restaurant
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setSelectedRestaurant(
+                          restaurant
+                        );
+
+                        setShowMenu(
+                          true
+                        );
+                      }}
+                      className="w-full bg-[#1f1f1f] border border-gray-700 hover:border-orange-500 transition duration-300 py-3 rounded-2xl text-sm font-semibold flex items-center justify-center gap-2"
+                    >
+
+                      <FaUtensils />
+
+                      View Menu
+
+                    </button>
+
+                  </div>
 
                 </div>
               </div>
@@ -335,7 +483,7 @@ export default function RestaurantsPage() {
         >
 
           <div
-            className="bg-[#111111] border border-gray-700 rounded-3xl max-w-md w-full overflow-hidden relative shadow-2xl"
+            className="bg-[#111111] border border-gray-700 rounded-3xl max-w-md w-full overflow-hidden relative shadow-2xl max-h-[90vh] overflow-y-auto"
             onClick={(e) =>
               e.stopPropagation()
             }
@@ -380,106 +528,157 @@ export default function RestaurantsPage() {
                 }
               </h2>
 
-              <div className="space-y-4 mb-6">
+              {/* MENU SECTION */}
+              {showMenu ? (
 
-                <p className="text-gray-300 flex items-center gap-3 text-sm">
+                <div>
 
-                  <FaMapMarkerAlt className="text-orange-500" />
+                  <h3 className="text-xl font-semibold mb-5 flex items-center gap-3">
 
-                  {
-                    selectedRestaurant.location
-                  }
+                    <FaUtensils className="text-orange-500" />
 
-                </p>
+                    Menu List
 
-                <p className="text-gray-300 flex items-center gap-3 text-sm">
+                  </h3>
 
-                  <FaClock className="text-orange-500" />
+                  <div className="space-y-4">
 
-                  Opens:{" "}
-                  {
-                    selectedRestaurant.openTime
-                  }
+                    {selectedRestaurant.menu.map(
+                      (
+                        item,
+                        index
+                      ) => (
 
-                </p>
+                        <div
+                          key={index}
+                          className="flex items-center justify-between bg-[#1a1a1a] border border-gray-800 rounded-2xl px-4 py-4"
+                        >
 
-                <p className="text-gray-300 flex items-center gap-3 text-sm">
+                          <span className="font-medium">
+                            {
+                              item.name
+                            }
+                          </span>
 
-                  <FaClock className="text-orange-500" />
+                          <span className="text-orange-500 font-bold">
+                            {
+                              item.price
+                            }
+                          </span>
 
-                  Closes:{" "}
-                  {
-                    selectedRestaurant.closeTime
-                  }
+                        </div>
+                      )
+                    )}
 
-                </p>
+                  </div>
 
-                <p className="text-gray-300 flex items-center gap-3 text-sm">
+                </div>
 
-                  <FaMotorcycle className="text-orange-500" />
+              ) : (
 
-                  {
-                    selectedRestaurant.delivery
-                  }
+                <>
+                  <div className="space-y-4 mb-6">
 
-                </p>
+                    <p className="text-gray-300 flex items-center gap-3 text-sm">
 
-                <p
-                  className={`font-semibold text-sm ${
-                    selectedRestaurant.status ===
-                    "Open"
-                      ? "text-green-500"
-                      : "text-red-500"
-                  }`}
-                >
-                  {
-                    selectedRestaurant.status
-                  }
-                </p>
+                      <FaMapMarkerAlt className="text-orange-500" />
 
-              </div>
+                      {
+                        selectedRestaurant.location
+                      }
 
-              {/* BUTTONS */}
-              <div className="flex gap-3 mb-5">
+                    </p>
 
-                {/* WHATSAPP */}
-                <a
-                  href={`https://wa.me/${selectedRestaurant.whatsapp}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 bg-green-600 hover:bg-green-700 transition duration-300 py-2 rounded-xl flex items-center justify-center gap-2 text-sm font-semibold"
-                >
+                    <p className="text-gray-300 flex items-center gap-3 text-sm">
 
-                  <FaWhatsapp />
+                      <FaClock className="text-orange-500" />
 
-                  WhatsApp
+                      Opens:{" "}
+                      {
+                        selectedRestaurant.openTime
+                      }
 
-                </a>
+                    </p>
 
-                {/* DIRECTION */}
-                <a
-                  href={`https://www.google.com/maps?q=${selectedRestaurant.latitude},${selectedRestaurant.longitude}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 transition duration-300 py-2 rounded-xl flex items-center justify-center gap-2 text-sm font-semibold"
-                >
+                    <p className="text-gray-300 flex items-center gap-3 text-sm">
 
-                  <FaDirections />
+                      <FaClock className="text-orange-500" />
 
-                  Direction
+                      Closes:{" "}
+                      {
+                        selectedRestaurant.closeTime
+                      }
 
-                </a>
+                    </p>
 
-              </div>
+                    <p className="text-gray-300 flex items-center gap-3 text-sm">
 
-              {/* DESCRIPTION */}
-              <p className="text-gray-400 leading-7 text-sm">
+                      <FaMotorcycle className="text-orange-500" />
 
-                {
-                  selectedRestaurant.description
-                }
+                      {
+                        selectedRestaurant.delivery
+                      }
 
-              </p>
+                    </p>
+
+                    <p
+                      className={`font-semibold text-sm ${
+                        selectedRestaurant.status ===
+                        "Open"
+                          ? "text-green-500"
+                          : "text-red-500"
+                      }`}
+                    >
+                      {
+                        selectedRestaurant.status
+                      }
+                    </p>
+
+                  </div>
+
+                  {/* BUTTONS */}
+                  <div className="flex gap-3 mb-5">
+
+                    {/* WHATSAPP */}
+                    <a
+                      href={`https://wa.me/${selectedRestaurant.whatsapp}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 bg-green-600 hover:bg-green-700 transition duration-300 py-2 rounded-xl flex items-center justify-center gap-2 text-sm font-semibold"
+                    >
+
+                      <FaWhatsapp />
+
+                      WhatsApp
+
+                    </a>
+
+                    {/* DIRECTION */}
+                    <a
+                      href={`https://www.google.com/maps?q=${selectedRestaurant.latitude},${selectedRestaurant.longitude}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 bg-blue-600 hover:bg-blue-700 transition duration-300 py-2 rounded-xl flex items-center justify-center gap-2 text-sm font-semibold"
+                    >
+
+                      <FaDirections />
+
+                      Direction
+
+                    </a>
+
+                  </div>
+
+                  {/* DESCRIPTION */}
+                  <p className="text-gray-400 leading-7 text-sm">
+
+                    {
+                      selectedRestaurant.description
+                    }
+
+                  </p>
+                </>
+              )}
 
             </div>
           </div>
