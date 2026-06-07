@@ -326,10 +326,8 @@ export default function RestaurantsPage() {
         );
       };
 
-    // RUN IMMEDIATELY
     updateRestaurantStatus();
 
-    // UPDATE EVERY 1 MINUTE
     const interval =
       setInterval(() => {
         updateRestaurantStatus();
@@ -341,7 +339,6 @@ export default function RestaurantsPage() {
 
   return (
     <main className="min-h-screen bg-black text-white overflow-x-hidden">
-
       <Navbar />
 
       <div className="pt-32 pb-24 px-5 sm:px-8 lg:px-12">
@@ -349,14 +346,12 @@ export default function RestaurantsPage() {
         {/* HERO */}
         <section className="text-center mb-16">
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-5 tracking-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-5 tracking-tight">
             Restaurants
           </h1>
 
-          <p className="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto leading-8">
-            Explore amazing
-            restaurants around
-            Sunyani.
+          <p className="text-gray-400 text-sm sm:text-base max-w-2xl mx-auto leading-8">
+            Explore amazing restaurants around Sunyani.
           </p>
 
         </section>
@@ -376,13 +371,10 @@ export default function RestaurantsPage() {
                 <div className="relative w-full h-64 overflow-hidden">
 
                   <Image
-                    src={
-                      restaurant.image
-                    }
-                    alt={
-                      restaurant.name
-                    }
+                    src={restaurant.image}
+                    alt={restaurant.name}
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                     className="object-cover hover:scale-110 transition duration-500"
                   />
 
@@ -391,10 +383,8 @@ export default function RestaurantsPage() {
                 {/* CONTENT */}
                 <div className="p-6">
 
-                  <h2 className="text-xl sm:text-2xl font-bold mb-4">
-                    {
-                      restaurant.name
-                    }
+                  <h2 className="text-lg sm:text-xl font-bold mb-4">
+                    {restaurant.name}
                   </h2>
 
                   <div className="space-y-3 mb-6">
@@ -403,9 +393,7 @@ export default function RestaurantsPage() {
 
                       <FaMapMarkerAlt className="text-orange-500" />
 
-                      {
-                        restaurant.location
-                      }
+                      {restaurant.location}
 
                     </p>
 
@@ -417,9 +405,7 @@ export default function RestaurantsPage() {
                           : "text-red-500"
                       }`}
                     >
-                      {
-                        restaurant.status
-                      }
+                      {restaurant.status}
                     </p>
 
                   </div>
@@ -507,13 +493,10 @@ export default function RestaurantsPage() {
             <div className="relative w-full h-52">
 
               <Image
-                src={
-                  selectedRestaurant.image
-                }
-                alt={
-                  selectedRestaurant.name
-                }
+                src={selectedRestaurant.image}
+                alt={selectedRestaurant.name}
                 fill
+                sizes="100vw"
                 className="object-cover"
               />
 
@@ -522,10 +505,8 @@ export default function RestaurantsPage() {
             {/* CONTENT */}
             <div className="p-5">
 
-              <h2 className="text-2xl font-bold mb-5">
-                {
-                  selectedRestaurant.name
-                }
+              <h2 className="text-xl font-bold mb-5">
+                {selectedRestaurant.name}
               </h2>
 
               {/* MENU SECTION */}
@@ -533,7 +514,7 @@ export default function RestaurantsPage() {
 
                 <div>
 
-                  <h3 className="text-xl font-semibold mb-5 flex items-center gap-3">
+                  <h3 className="text-lg font-semibold mb-5 flex items-center gap-3">
 
                     <FaUtensils className="text-orange-500" />
 
@@ -555,15 +536,11 @@ export default function RestaurantsPage() {
                         >
 
                           <span className="font-medium">
-                            {
-                              item.name
-                            }
+                            {item.name}
                           </span>
 
                           <span className="text-orange-500 font-bold">
-                            {
-                              item.price
-                            }
+                            {item.price}
                           </span>
 
                         </div>
@@ -583,9 +560,7 @@ export default function RestaurantsPage() {
 
                       <FaMapMarkerAlt className="text-orange-500" />
 
-                      {
-                        selectedRestaurant.location
-                      }
+                      {selectedRestaurant.location}
 
                     </p>
 
@@ -594,9 +569,7 @@ export default function RestaurantsPage() {
                       <FaClock className="text-orange-500" />
 
                       Opens:{" "}
-                      {
-                        selectedRestaurant.openTime
-                      }
+                      {selectedRestaurant.openTime}
 
                     </p>
 
@@ -605,9 +578,7 @@ export default function RestaurantsPage() {
                       <FaClock className="text-orange-500" />
 
                       Closes:{" "}
-                      {
-                        selectedRestaurant.closeTime
-                      }
+                      {selectedRestaurant.closeTime}
 
                     </p>
 
@@ -615,9 +586,7 @@ export default function RestaurantsPage() {
 
                       <FaMotorcycle className="text-orange-500" />
 
-                      {
-                        selectedRestaurant.delivery
-                      }
+                      {selectedRestaurant.delivery}
 
                     </p>
 
@@ -629,9 +598,7 @@ export default function RestaurantsPage() {
                           : "text-red-500"
                       }`}
                     >
-                      {
-                        selectedRestaurant.status
-                      }
+                      {selectedRestaurant.status}
                     </p>
 
                   </div>
@@ -639,7 +606,6 @@ export default function RestaurantsPage() {
                   {/* BUTTONS */}
                   <div className="flex gap-3 mb-5">
 
-                    {/* WHATSAPP */}
                     <a
                       href={`https://wa.me/${selectedRestaurant.whatsapp}`}
                       target="_blank"
@@ -653,7 +619,6 @@ export default function RestaurantsPage() {
 
                     </a>
 
-                    {/* DIRECTION */}
                     <a
                       href={`https://www.google.com/maps?q=${selectedRestaurant.latitude},${selectedRestaurant.longitude}`}
                       target="_blank"
@@ -669,12 +634,9 @@ export default function RestaurantsPage() {
 
                   </div>
 
-                  {/* DESCRIPTION */}
                   <p className="text-gray-400 leading-7 text-sm">
 
-                    {
-                      selectedRestaurant.description
-                    }
+                    {selectedRestaurant.description}
 
                   </p>
                 </>

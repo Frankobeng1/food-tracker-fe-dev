@@ -340,7 +340,7 @@ useEffect(() => {
             </div>
           </div>
 
-          <h1 className="text-3xl font-bold mb-4">
+          <h1 className="text-2xl font-bold mb-4">
             Location Access Needed
           </h1>
 
@@ -377,11 +377,11 @@ useEffect(() => {
             </div>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-5 tracking-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-5 tracking-tight">
             Nearby Restaurants
           </h1>
 
-          <p className="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto leading-8">
+          <p className="text-gray-400 text-sm sm:text-base max-w-2xl mx-auto leading-8">
             Restaurants are automatically arranged based on your live location.
           </p>
 
@@ -419,11 +419,11 @@ useEffect(() => {
                 </div>
 
                 <div>
-                  <h2 className="text-xl sm:text-2xl font-bold leading-tight mb-2">
+                  <h2 className="text-lg sm:text-xl font-bold leading-tight mb-2">
                     {restaurant.name}
                   </h2>
 
-                  <p className="text-gray-400 text-sm sm:text-base">
+                  <p className="text-gray-400 text-xs sm:text-sm">
                     {restaurant.location}
                   </p>
                 </div>
@@ -433,7 +433,7 @@ useEffect(() => {
               {/* DISTANCE */}
               <div className="mb-3">
 
-                <p className="text-green-500 font-semibold text-base">
+                <p className="text-green-500 font-semibold text-sm">
                   {restaurant.calculatedDistance?.toFixed(1)} KM Away
                 </p>
 
@@ -466,7 +466,7 @@ useEffect(() => {
               <button
                 type="button"
                 onClick={() => setSelectedRestaurant(restaurant)}
-                className="w-full bg-orange-500 hover:bg-orange-600 transition duration-300 py-3 rounded-2xl text-sm sm:text-base font-semibold"
+                className="w-full bg-orange-500 hover:bg-orange-600 transition duration-300 py-3 rounded-2xl text-xs sm:text-sm font-semibold"
               >
                 View Restaurant
               </button>
@@ -505,7 +505,7 @@ useEffect(() => {
                 <FaMapMarkerAlt className="text-orange-500 text-3xl" />
               </div>
 
-              <h2 className="text-2xl font-bold mb-6">
+              <h2 className="text-xl font-bold mb-6">
                 {selectedRestaurant.name}
               </h2>
 

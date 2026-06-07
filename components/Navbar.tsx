@@ -81,16 +81,16 @@ export default function Navbar() {
           className="flex items-center gap-3"
         >
 
-          <FaUtensils className="text-orange-500 text-3xl" />
+          <FaUtensils className="text-orange-500 text-2xl" />
 
-          <h1 className="text-2xl sm:text-3xl font-bold">
+          <h1 className="text-xl sm:text-2xl font-bold">
             FoodTracker
           </h1>
 
         </Link>
 
         {/* NAV LINKS */}
-        <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 text-base sm:text-xl">
+        <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 text-sm sm:text-base">
 
           <Link
             href="/"
@@ -127,7 +127,7 @@ export default function Navbar() {
             className="relative hover:text-orange-500 transition duration-300"
           >
 
-            <FaBell className="text-2xl" />
+            <FaBell className="text-xl" />
 
             {unreadCount > 0 && (
               <span className="absolute -top-2 -right-3 bg-red-500 text-xs min-w-[22px] h-[22px] px-1 rounded-full flex items-center justify-center font-bold">
