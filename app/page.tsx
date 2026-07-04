@@ -2,7 +2,6 @@ import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import { FaMapMarkerAlt } from "react-icons/fa";
 
-
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-black text-white flex flex-col overflow-x-hidden">
@@ -28,38 +27,7 @@ export default function HomePage() {
         </Link>
       </section>
 
-      {/* Footer */}
-<footer className="bg-black">
-
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-12">
-
-          <div className="flex flex-col items-center text-center">
-
-            {/* Brand */}
-            <h2 className="text-xl font-bold text-white mb-4">
-              Restaurant Tracker
-            </h2>
-
-            <p className="text-gray-400 leading-7 text-sm max-w-2xl mb-6">
-              Discover nearby restaurants, explore locations,
-              and find the best food places around your city.
-            </p>
-
-            {/* Location */}
-            <p className="text-gray-400 flex items-center gap-3">
-              <FaMapMarkerAlt className="text-orange-500" />
-              Sunyani, Ghana
-            </p>
-
-          </div>
-
-          {/* Bottom Footer */}
-          <div className="border-t border-gray-800 mt-10 pt-6 text-center text-gray-500 text-sm">
-            © 2026 Restaurant Tracking System. All rights reserved.
-          </div>
-
-        </div>
-      </footer>
+      {/* Footer is now shared across all pages via RootLayout */}
     </main>
   );
 }
