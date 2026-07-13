@@ -1,5 +1,4 @@
 import Navbar from "@/components/Navbar";
-
 import {
   FaMapMarkerAlt,
   FaClock,
@@ -13,279 +12,136 @@ import {
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-black text-white overflow-x-hidden">
+    <main className="min-h-screen bg-[#08080a] text-white overflow-x-hidden relative">
+      <div className="absolute top-0 right-1/3 w-[500px] h-[500px] bg-orange-500/5 rounded-full blur-[120px] pointer-events-none -z-10" />
 
       {/* NAVBAR */}
       <Navbar />
 
       {/* HERO SECTION */}
-      <section className="relative pt-36 pb-24 px-6 sm:px-8 lg:px-12 text-center">
-
-        <div className="absolute inset-0 bg-gradient-to-b from-orange-500/10 to-transparent pointer-events-none" />
-
+      <section className="relative pt-40 pb-20 px-4 sm:px-6 lg:px-8 text-center">
         <div className="relative z-10 max-w-5xl mx-auto">
-
-          <div className="inline-flex items-center gap-3 bg-[#111111] border border-orange-500 px-6 py-3 rounded-full mb-8">
-
-            <FaUtensils className="text-orange-500" />
-
-            <span className="text-sm sm:text-base font-medium">
-              Smart Restaurant Tracking Platform
+          <div className="inline-flex items-center gap-2.5 bg-orange-500/10 border border-orange-500/30 px-5 py-2 rounded-full mb-8">
+            <FaUtensils className="text-orange-500 text-sm" />
+            <span className="text-xs sm:text-sm font-bold text-orange-400 uppercase tracking-wider">
+              Smart Tracking Platform
             </span>
-
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold leading-tight mb-8">
-
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-black leading-tight mb-8 bg-gradient-to-b from-white via-white to-gray-500 bg-clip-text text-transparent">
             About FoodTracker
-
           </h1>
 
-          <p className="text-gray-400 text-base sm:text-lg md:text-xl leading-9 max-w-3xl mx-auto">
-
-            FoodTracker helps users discover restaurants,
-            track restaurant activities, explore menus,
-            receive live notifications, and connect with
-            restaurants easily from anywhere.
-
+          <p className="text-gray-400 text-base sm:text-lg md:text-xl leading-relaxed max-w-3xl mx-auto">
+            FoodTracker bridges the gap between hungry users and local diners. We calculate operating states, map exact walking/driving distances, organize digital menus, and provide direct WhatsApp chat triggers.
           </p>
-
         </div>
       </section>
 
       {/* FEATURES */}
-      <section className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pb-24">
-
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-
-          {/* FEATURE 1 */}
-          <div className="bg-[#111111] border border-gray-800 hover:border-orange-500 rounded-3xl p-8 transition duration-300 hover:-translate-y-2">
-
-            <FaMapMarkerAlt className="text-orange-500 text-5xl mb-6" />
-
-            <h2 className="text-2xl font-bold mb-4">
-              Nearby Restaurants
-            </h2>
-
-            <p className="text-gray-400 leading-8">
-              Find restaurants around your current location
-              and explore food places near you instantly.
-            </p>
-
-          </div>
-
-          {/* FEATURE 2 */}
-          <div className="bg-[#111111] border border-gray-800 hover:border-orange-500 rounded-3xl p-8 transition duration-300 hover:-translate-y-2">
-
-            <FaClock className="text-orange-500 text-5xl mb-6" />
-
-            <h2 className="text-2xl font-bold mb-4">
-              Live Open Status
-            </h2>
-
-            <p className="text-gray-400 leading-8">
-              Restaurants automatically show whether
-              they are currently open or closed in real time.
-            </p>
-
-          </div>
-
-          {/* FEATURE 3 */}
-          <div className="bg-[#111111] border border-gray-800 hover:border-orange-500 rounded-3xl p-8 transition duration-300 hover:-translate-y-2">
-
-            <FaSearchLocation className="text-orange-500 text-5xl mb-6" />
-
-            <h2 className="text-2xl font-bold mb-4">
-              Smart Search
-            </h2>
-
-            <p className="text-gray-400 leading-8">
-              Quickly discover restaurants, food courts,
-              and local food places with ease.
-            </p>
-
-          </div>
-
-          {/* FEATURE 4 */}
-          <div className="bg-[#111111] border border-gray-800 hover:border-orange-500 rounded-3xl p-8 transition duration-300 hover:-translate-y-2">
-
-            <FaBell className="text-orange-500 text-5xl mb-6" />
-
-            <h2 className="text-2xl font-bold mb-4">
-              Live Notifications
-            </h2>
-
-            <p className="text-gray-400 leading-8">
-              Receive alerts when restaurants open,
-              close, or start taking new orders.
-            </p>
-
-          </div>
-
-          {/* FEATURE 5 */}
-          <div className="bg-[#111111] border border-gray-800 hover:border-orange-500 rounded-3xl p-8 transition duration-300 hover:-translate-y-2">
-
-            <FaMotorcycle className="text-orange-500 text-5xl mb-6" />
-
-            <h2 className="text-2xl font-bold mb-4">
-              Delivery Services
-            </h2>
-
-            <p className="text-gray-400 leading-8">
-              View restaurants that offer delivery
-              services directly to customers.
-            </p>
-
-          </div>
-
-          {/* FEATURE 6 */}
-          <div className="bg-[#111111] border border-gray-800 hover:border-orange-500 rounded-3xl p-8 transition duration-300 hover:-translate-y-2">
-
-            <FaWhatsapp className="text-orange-500 text-5xl mb-6" />
-
-            <h2 className="text-2xl font-bold mb-4">
-              Quick Contact
-            </h2>
-
-            <p className="text-gray-400 leading-8">
-              Contact restaurants directly through
-              WhatsApp and access directions easily.
-            </p>
-
-          </div>
-
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {[
+            {
+              icon: <FaMapMarkerAlt className="text-orange-500 text-3xl" />,
+              title: "Nearby Food Joints",
+              desc: "Locate food spaces around your current latitude/longitude instantly. Arranged dynamically by distance.",
+            },
+            {
+              icon: <FaClock className="text-orange-500 text-3xl" />,
+              title: "Live Open Status",
+              desc: "Food joints automatically display operational states based on timezone calculations.",
+            },
+            {
+              icon: <FaSearchLocation className="text-orange-500 text-3xl" />,
+              title: "Smart Search & Tags",
+              desc: "Discover dining spots by name, cuisine tag, or locations via smart matching controls.",
+            },
+            {
+              icon: <FaBell className="text-orange-500 text-3xl" />,
+              title: "Live System Alerts",
+              desc: "Track operating windows and receive updates when ordering opens or closing approaches.",
+            },
+            {
+              icon: <FaMotorcycle className="text-orange-500 text-3xl" />,
+              title: "Delivery Flags",
+              desc: "Quickly identify which spaces support home delivery options directly to your doorstep.",
+            },
+            {
+              icon: <FaWhatsapp className="text-orange-500 text-3xl" />,
+              title: "Direct Connects",
+              desc: "Initiate direct food orders on WhatsApp or request navigation vectors to coordinates.",
+            },
+          ].map((item, i) => (
+            <div
+              key={i}
+              className="bg-white/[0.02] border border-white/[0.06] hover:border-orange-500/30 rounded-[2rem] p-8 hover:-translate-y-1.5 transition-all duration-300 group"
+            >
+              <div className="w-14 h-14 rounded-2xl bg-orange-500/10 flex items-center justify-center mb-6 border border-orange-500/20 group-hover:scale-105 transition-transform">
+                {item.icon}
+              </div>
+              <h2 className="text-xl font-bold mb-3 group-hover:text-orange-400 transition-colors">
+                {item.title}
+              </h2>
+              <p className="text-gray-400 text-sm leading-relaxed">{item.desc}</p>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* SYSTEM INFO */}
-      <section className="px-6 sm:px-8 lg:px-12 pb-24">
-
-        <div className="max-w-6xl mx-auto bg-[#111111] border border-gray-800 rounded-[40px] p-10 sm:p-14">
-
+      <section className="px-4 sm:px-6 lg:px-8 pb-24 w-full">
+        <div className="max-w-6xl mx-auto bg-white/[0.02] border border-white/[0.06] rounded-[2.5rem] p-8 sm:p-14 backdrop-blur-xl">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-
             {/* LEFT */}
             <div>
-
-              <h2 className="text-3xl sm:text-4xl font-bold mb-6 leading-tight">
-
-                Modern Restaurant Tracking Experience
-
+              <h2 className="text-3xl sm:text-4xl font-black mb-6 leading-tight">
+                Modern Food Joint Tracking Architecture
               </h2>
-
-              <p className="text-gray-400 leading-8 mb-8">
-
-                FoodTracker is designed to make restaurant
-                discovery simple, fast, and interactive.
-                Users can explore restaurants, check menus,
-                receive notifications, and connect with food
-                vendors directly from one platform.
-
+              <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-8">
+                FoodTracker is architected as a lightweight, zero-latency index. We use modern geolocation, Leaflet maps overlays, local storage states, and dynamic status computation loops to ensure you always have access to up-to-date data.
               </p>
 
-              <div className="flex flex-wrap gap-4">
-
-                <div className="bg-black border border-gray-800 px-5 py-3 rounded-2xl">
-                  Real-Time Tracking
-                </div>
-
-                <div className="bg-black border border-gray-800 px-5 py-3 rounded-2xl">
-                  Live Notifications
-                </div>
-
-                <div className="bg-black border border-gray-800 px-5 py-3 rounded-2xl">
-                  Restaurant Menus
-                </div>
-
+              <div className="flex flex-wrap gap-3">
+                <span className="bg-white/[0.03] border border-white/[0.08] text-gray-400 px-4 py-2.5 rounded-xl text-xs font-bold">
+                  Client-side Geolocation
+                </span>
+                <span className="bg-white/[0.03] border border-white/[0.08] text-gray-400 px-4 py-2.5 rounded-xl text-xs font-bold">
+                  Dynamic Distance Calculations
+                </span>
+                <span className="bg-white/[0.03] border border-white/[0.08] text-gray-400 px-4 py-2.5 rounded-xl text-xs font-bold">
+                  Next.js App Router
+                </span>
               </div>
-
             </div>
 
             {/* RIGHT */}
-            <div className="bg-black border border-gray-800 rounded-3xl p-8">
-
+            <div className="bg-white/[0.01] border border-white/[0.06] rounded-[2rem] p-8">
               <div className="space-y-6">
-
-                <div className="flex items-center justify-between border-b border-gray-800 pb-4">
-
-                  <div className="flex items-center gap-3">
-
-                    <FaDirections className="text-orange-500" />
-
-                    <span>Restaurant Navigation</span>
-
+                {[
+                  { label: "Restaurant Navigation", value: "Active", icon: <FaDirections className="text-orange-500" /> },
+                  { label: "Notification Loops", value: "Running", icon: <FaBell className="text-orange-500" /> },
+                  { label: "Menu Indexing Services", value: "Enabled", icon: <FaUtensils className="text-orange-500" /> },
+                  { label: "Nearby Map Overlays", value: "Online", icon: <FaMapMarkerAlt className="text-orange-500" /> },
+                ].map((row, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center justify-between border-b border-white/[0.05] last:border-none pb-4 last:pb-0"
+                  >
+                    <div className="flex items-center gap-3">
+                      {row.icon}
+                      <span className="text-sm font-semibold">{row.label}</span>
+                    </div>
+                    <span className="text-emerald-400 font-bold text-xs bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+                      {row.value}
+                    </span>
                   </div>
-
-                  <span className="text-green-500">
-                    Active
-                  </span>
-
-                </div>
-
-                <div className="flex items-center justify-between border-b border-gray-800 pb-4">
-
-                  <div className="flex items-center gap-3">
-
-                    <FaBell className="text-orange-500" />
-
-                    <span>Notification System</span>
-
-                  </div>
-
-                  <span className="text-green-500">
-                    Running
-                  </span>
-
-                </div>
-
-                <div className="flex items-center justify-between border-b border-gray-800 pb-4">
-
-                  <div className="flex items-center gap-3">
-
-                    <FaUtensils className="text-orange-500" />
-
-                    <span>Restaurant Menus</span>
-
-                  </div>
-
-                  <span className="text-green-500">
-                    Enabled
-                  </span>
-
-                </div>
-
-                <div className="flex items-center justify-between">
-
-                  <div className="flex items-center gap-3">
-
-                    <FaMapMarkerAlt className="text-orange-500" />
-
-                    <span>Nearby Detection</span>
-
-                  </div>
-
-                  <span className="text-green-500">
-                    Online
-                  </span>
-
-                </div>
-
+                ))}
               </div>
-
             </div>
-
           </div>
-
         </div>
       </section>
-
-      {/* FOOTER */}
-      <footer className="border-t border-gray-800 py-8 text-center text-gray-500 text-sm">
-
-        © 2026 FoodTracker. All rights reserved.
-
-      </footer>
-
     </main>
   );
 }

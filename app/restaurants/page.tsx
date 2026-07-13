@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Image from "next/image";
-
+import Link from "next/link";
 import {
   FaMapMarkerAlt,
   FaClock,
@@ -12,486 +12,250 @@ import {
   FaMotorcycle,
   FaDirections,
   FaUtensils,
+  FaSearch,
+  FaInfoCircle,
 } from "react-icons/fa";
+import { restaurants, Restaurant } from "@/lib/data/restaurants";
 
-// AUTO OPEN/CLOSE DETECTION
-const getRestaurantStatus = (
-  openTime: string,
-  closeTime: string
-) => {
+// Auto Open/Close Detection
+const getRestaurantStatus = (openTime: string, closeTime: string) => {
   const now = new Date();
 
   const convertTo24Hour = (time: string) => {
-    const [hourMinute, modifier] =
-      time.split(" ");
-
-    const [hourStr, minuteStr] =
-      hourMinute.split(":");
-
+    const [hourMinute, modifier] = time.split(" ");
+    const [hourStr, minuteStr] = hourMinute.split(":");
     let hours = Number(hourStr);
-
     const minutes = Number(minuteStr);
 
-    if (
-      modifier === "PM" &&
-      hours !== 12
-    ) {
+    if (modifier === "PM" && hours !== 12) {
       hours += 12;
     }
-
-    if (
-      modifier === "AM" &&
-      hours === 12
-    ) {
+    if (modifier === "AM" && hours === 12) {
       hours = 0;
     }
-
     return { hours, minutes };
   };
 
-  const open =
-    convertTo24Hour(openTime);
-
-  const close =
-    convertTo24Hour(closeTime);
+  const open = convertTo24Hour(openTime);
+  const close = convertTo24Hour(closeTime);
 
   const openDate = new Date(now);
-
-  openDate.setHours(
-    open.hours,
-    open.minutes,
-    0,
-    0
-  );
+  openDate.setHours(open.hours, open.minutes, 0, 0);
 
   const closeDate = new Date(now);
+  closeDate.setHours(close.hours, close.minutes, 0, 0);
 
-  closeDate.setHours(
-    close.hours,
-    close.minutes,
-    0,
-    0
-  );
-
-  // HANDLE MIDNIGHT
+  // Handle midnight open/close
   if (close.hours < open.hours) {
-    closeDate.setDate(
-      closeDate.getDate() + 1
-    );
+    closeDate.setDate(closeDate.getDate() + 1);
   }
 
-  return now >= openDate &&
-    now <= closeDate
-    ? "Open"
-    : "Closed";
+  return now >= openDate && now <= closeDate ? "Open" : "Closed";
 };
 
-// RESTAURANTS
-const restaurants = [
-  {
-    id: 1,
-
-    name: "Sunyani Royal Restaurant",
-
-    location: "Sunyani Central",
-
-    openTime: "8:00 AM",
-
-    closeTime: "10:00 PM",
-
-    whatsapp: "233558627995",
-
-    delivery: "Delivery Available",
-
-    latitude: 7.3399,
-
-    longitude: -2.3268,
-
-    description:
-      "A modern restaurant offering local and continental dishes with a relaxing atmosphere.",
-
-    image:
-      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1200",
-
-    menu: [
-      {
-        name: "Jollof Rice",
-        price: "GH₵ 45",
-      },
-
-      {
-        name: "Banku & Tilapia",
-        price: "GH₵ 70",
-      },
-
-      {
-        name: "Fried Rice Chicken",
-        price: "GH₵ 55",
-      },
-
-      {
-        name: "Pizza",
-        price: "GH₵ 80",
-      },
-    ],
-  },
-
-  {
-    id: 2,
-
-    name: "African Pot",
-
-    location: "Magazine Area",
-
-    openTime: "9:00 AM",
-
-    closeTime: "11:00 PM",
-
-    whatsapp: "233559815564",
-
-    delivery: "Delivery Available",
-
-    latitude: 7.3362,
-
-    longitude: -2.3125,
-
-    description:
-      "Popular for traditional Ghanaian meals and affordable food services.",
-
-    image:
-      "https://images.unsplash.com/photo-1552566626-52f8b828add9?q=80&w=1200",
-
-    menu: [
-      {
-        name: "Fufu & Light Soup",
-        price: "GH₵ 50",
-      },
-
-      {
-        name: "Ampesi",
-        price: "GH₵ 35",
-      },
-
-      {
-        name: "Waakye",
-        price: "GH₵ 30",
-      },
-
-      {
-        name: "Banku & Okro",
-        price: "GH₵ 45",
-      },
-    ],
-  },
-
-  {
-    id: 3,
-
-    name: "Sky View Restaurant",
-
-    location: "Berlin Top",
-
-    openTime: "10:00 AM",
-
-    closeTime: "9:00 PM",
-
-    whatsapp: "233551924746",
-
-    delivery: "No Delivery",
-
-    latitude: 7.3451,
-
-    longitude: -2.3189,
-
-    description:
-      "A rooftop restaurant with beautiful city views and delicious meals.",
-
-    image:
-      "https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=1200",
-
-    menu: [
-      {
-        name: "Burger & Fries",
-        price: "GH₵ 60",
-      },
-
-      {
-        name: "Chicken Wings",
-        price: "GH₵ 55",
-      },
-
-      {
-        name: "Pasta",
-        price: "GH₵ 70",
-      },
-
-      {
-        name: "Ice Cream",
-        price: "GH₵ 25",
-      },
-    ],
-  },
-
-  {
-    id: 4,
-
-    name: "Sun City Food Court",
-
-    location: "Sunyani Main Town",
-
-    openTime: "7:00 AM",
-
-    closeTime: "12:00 AM",
-
-    whatsapp: "233274445555",
-
-    delivery: "Delivery Available",
-
-    latitude: 7.3348,
-
-    longitude: -2.3154,
-
-    description:
-      "A food court with multiple food vendors and fast-food services.",
-
-    image:
-      "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1200",
-
-    menu: [
-      {
-        name: "Shawarma",
-        price: "GH₵ 40",
-      },
-
-      {
-        name: "Fried Rice",
-        price: "GH₵ 50",
-      },
-
-      {
-        name: "Chicken Pizza",
-        price: "GH₵ 90",
-      },
-
-      {
-        name: "Smoothie",
-        price: "GH₵ 20",
-      },
-    ],
-  },
-];
-
-type Restaurant =
-  (typeof restaurants)[number] & {
-    status?: string;
-  };
-
 export default function RestaurantsPage() {
-  const [
-    selectedRestaurant,
-    setSelectedRestaurant,
-  ] = useState<Restaurant | null>(
-    null
-  );
+  const [selectedRestaurant, setSelectedRestaurant] = useState<Restaurant | null>(null);
+  const [showMenu, setShowMenu] = useState(false);
+  const [restaurantData, setRestaurantData] = useState<Restaurant[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState("All");
 
-  const [
-    showMenu,
-    setShowMenu,
-  ] = useState(false);
-
-  const [
-    restaurantData,
-    setRestaurantData,
-  ] = useState<Restaurant[]>([]);
-
-  // AUTO UPDATE OPEN/CLOSE STATUS
+  // Sync statuses on load and on interval
   useEffect(() => {
-    const updateRestaurantStatus =
-      () => {
-        const updatedRestaurants =
-          restaurants.map(
-            (restaurant) => ({
-              ...restaurant,
-
-              status:
-                getRestaurantStatus(
-                  restaurant.openTime,
-                  restaurant.closeTime
-                ),
-            })
-          );
-
-        setRestaurantData(
-          updatedRestaurants
-        );
-      };
+    const updateRestaurantStatus = () => {
+      const updated = restaurants.map((res) => ({
+        ...res,
+        status: getRestaurantStatus(res.openTime, res.closeTime),
+      }));
+      setRestaurantData(updated);
+    };
 
     updateRestaurantStatus();
-
-    const interval =
-      setInterval(() => {
-        updateRestaurantStatus();
-      }, 60000);
-
-    return () =>
-      clearInterval(interval);
+    const interval = setInterval(updateRestaurantStatus, 60000);
+    return () => clearInterval(interval);
   }, []);
 
+  const categories = ["All", "Local", "Continental", "Fast Food", "Rooftop"];
+
+  // Search & Filter computation
+  const filteredRestaurants = restaurantData.filter((res) => {
+    const matchesSearch =
+      res.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      res.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      res.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+
+    const matchesCategory =
+      activeCategory === "All" || res.tags.includes(activeCategory);
+
+    return matchesSearch && matchesCategory;
+  });
+
   return (
-    <main className="min-h-screen bg-black text-white overflow-x-hidden">
+    <main className="min-h-screen bg-[#08080a] text-white overflow-x-hidden relative">
+      <div className="absolute top-0 left-1/3 w-[500px] h-[500px] bg-orange-500/5 rounded-full blur-[120px] pointer-events-none -z-10" />
+
       <Navbar />
 
-      <div className="pt-32 pb-24 px-5 sm:px-8 lg:px-12">
-
-        {/* HERO */}
-        <section className="text-center mb-16">
-
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-5 tracking-tight">
-            Restaurants
+      <div className="pt-36 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        {/* Hero title */}
+        <div className="text-center mb-16">
+          <h1 className="text-4xl sm:text-6xl font-black mb-5 tracking-tight bg-gradient-to-r from-white via-white to-gray-500 bg-clip-text text-transparent">
+            Explore Food Joints
           </h1>
-
-          <p className="text-gray-400 text-sm sm:text-base max-w-2xl mx-auto leading-8">
-            Explore amazing restaurants around Sunyani.
+          <p className="text-gray-400 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+            Discover catalog details, active operating hours, menu lists, and contact options. Filter by categories to find exactly what you crave.
           </p>
+        </div>
 
-        </section>
+        {/* Filters and Search controls */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12 bg-white/[0.02] border border-white/[0.06] p-6 rounded-[2rem] backdrop-blur-xl">
+          {/* Search bar */}
+          <div className="relative w-full md:max-w-md">
+            <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm" />
+            <input
+              type="text"
+              placeholder="Search by name, location, food..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-white/[0.03] border border-white/[0.08] hover:border-white/[0.15] focus:border-orange-500/50 rounded-2xl pl-11 pr-4 py-3 text-sm focus:outline-none transition-all duration-300 placeholder-gray-500"
+            />
+          </div>
 
-        {/* RESTAURANTS */}
-        <section className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-10">
-
-          {restaurantData.map(
-            (restaurant) => (
-
-              <div
-                key={restaurant.id}
-                className="bg-[#111111] border border-gray-800 rounded-3xl overflow-hidden hover:border-orange-500 transition-all duration-300 hover:-translate-y-2 shadow-lg"
+          {/* Tag buttons */}
+          <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`px-4.5 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-300 border ${
+                  activeCategory === cat
+                    ? "bg-orange-500 border-orange-500 text-white shadow-lg shadow-orange-500/20"
+                    : "bg-white/[0.02] border-white/[0.06] text-gray-400 hover:text-white hover:bg-white/[0.05]"
+                }`}
               >
+                {cat}
+              </button>
+            ))}
+          </div>
+        </div>
 
-                {/* IMAGE */}
-                <div className="relative w-full h-64 overflow-hidden">
+        {/* Results count info */}
+        <div className="mb-8 text-sm text-gray-400 font-medium">
+          Showing <span className="text-orange-500 font-bold">{filteredRestaurants.length}</span> food joint(s)
+        </div>
 
+        {/* Grid List */}
+        {filteredRestaurants.length === 0 ? (
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-[2.5rem] p-16 text-center">
+            <FaUtensils className="text-5xl text-gray-600 mx-auto mb-4" />
+            <h3 className="text-2xl font-bold mb-2">No Food Joints Found</h3>
+            <p className="text-gray-400 text-sm">Try tweaking your search query or choosing another category.</p>
+          </div>
+        ) : (
+          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {filteredRestaurants.map((res) => (
+              <div
+                key={res.id}
+                className="bg-white/[0.02] border border-white/[0.06] rounded-[2.2rem] overflow-hidden hover:border-orange-500/40 transition-all duration-300 hover:-translate-y-2 shadow-xl flex flex-col justify-between group h-full"
+              >
+                {/* Image & Tags header */}
+                <div className="relative w-full h-56 overflow-hidden">
                   <Image
-                    src={restaurant.image}
-                    alt={restaurant.name}
+                    src={res.image}
+                    alt={res.name}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                    className="object-cover hover:scale-110 transition duration-500"
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute bottom-4 left-4 flex flex-wrap gap-2">
+                    {res.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-[9px] uppercase font-black px-2.5 py-1 bg-black/60 backdrop-blur-md rounded-lg text-orange-400 border border-white/10"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
 
-                </div>
-
-                {/* CONTENT */}
-                <div className="p-6">
-
-                  <h2 className="text-lg sm:text-xl font-bold mb-4">
-                    {restaurant.name}
-                  </h2>
-
-                  <div className="space-y-3 mb-6">
-
-                    <p className="text-gray-400 flex items-center gap-3 text-sm">
-
-                      <FaMapMarkerAlt className="text-orange-500" />
-
-                      {restaurant.location}
-
-                    </p>
-
-                    <p
-                      className={`font-semibold text-sm ${
-                        restaurant.status ===
-                        "Open"
-                          ? "text-green-500"
-                          : "text-red-500"
+                  {/* Status Overlay Float */}
+                  <div className="absolute top-4 right-4">
+                    <span
+                      className={`text-[10px] font-black px-3.5 py-1.5 rounded-full border shadow-md backdrop-blur-md ${
+                        res.status === "Open"
+                          ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
+                          : "bg-rose-500/10 border-rose-500/30 text-rose-400"
                       }`}
                     >
-                      {restaurant.status}
+                      {res.status}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Content info */}
+                <div className="p-6 flex-1 flex flex-col justify-between">
+                  <div>
+                    <h2 className="text-xl font-bold mb-3 group-hover:text-orange-400 transition-colors">
+                      {res.name}
+                    </h2>
+                    <p className="text-gray-400 text-xs sm:text-sm line-clamp-2 leading-relaxed mb-4">
+                      {res.description}
                     </p>
 
+                    <div className="flex items-center gap-2.5 text-xs text-gray-500 mb-6">
+                      <FaMapMarkerAlt className="text-orange-500 text-sm flex-shrink-0" />
+                      <span>{res.location}</span>
+                    </div>
                   </div>
 
-                  {/* BUTTONS */}
-                  <div className="flex flex-col gap-3">
+                  {/* Action Buttons Row */}
+                  <div className="grid grid-cols-2 gap-3 pt-4 border-t border-white/[0.06]">
+                    <Link href={`/places/${res.id}`} className="w-full">
+                      <button className="w-full bg-orange-500 hover:bg-orange-600 transition-all duration-300 py-3 rounded-xl text-xs font-extrabold flex items-center justify-center gap-1.5 shadow-md shadow-orange-500/10 hover:scale-102">
+                        <FaInfoCircle />
+                        Full Page
+                      </button>
+                    </Link>
 
                     <button
                       onClick={() => {
-                        setSelectedRestaurant(
-                          restaurant
-                        );
-
-                        setShowMenu(
-                          false
-                        );
+                        setSelectedRestaurant(res);
+                        setShowMenu(true);
                       }}
-                      className="w-full bg-orange-500 hover:bg-orange-600 transition duration-300 py-3 rounded-2xl text-sm font-semibold"
+                      className="w-full bg-white/[0.03] border border-white/[0.08] hover:bg-white/[0.06] hover:border-orange-500/30 hover:text-orange-400 transition-all duration-300 py-3 rounded-xl text-xs font-extrabold flex items-center justify-center gap-1.5"
                     >
-                      View Restaurant
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        setSelectedRestaurant(
-                          restaurant
-                        );
-
-                        setShowMenu(
-                          true
-                        );
-                      }}
-                      className="w-full bg-[#1f1f1f] border border-gray-700 hover:border-orange-500 transition duration-300 py-3 rounded-2xl text-sm font-semibold flex items-center justify-center gap-2"
-                    >
-
                       <FaUtensils />
-
-                      View Menu
-
+                      Menu List
                     </button>
-
                   </div>
-
                 </div>
               </div>
-            )
-          )}
-        </section>
+            ))}
+          </section>
+        )}
       </div>
 
-      {/* MODAL */}
+      {/* QUICK PREVIEW MODAL */}
       {selectedRestaurant && (
-
         <div
           className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 px-4"
-          onClick={() =>
-            setSelectedRestaurant(
-              null
-            )
-          }
+          onClick={() => setSelectedRestaurant(null)}
         >
-
           <div
-            className="bg-[#111111] border border-gray-700 rounded-3xl max-w-md w-full overflow-hidden relative shadow-2xl max-h-[90vh] overflow-y-auto"
-            onClick={(e) =>
-              e.stopPropagation()
-            }
+            className="bg-[#0e0e11] border border-white/[0.08] rounded-[2.5rem] max-w-md w-full overflow-hidden relative shadow-2xl max-h-[90vh] overflow-y-auto animate-fade-in-up"
+            onClick={(e) => e.stopPropagation()}
           >
-
-            {/* CLOSE */}
+            {/* Close Icon */}
             <button
-              onClick={() =>
-                setSelectedRestaurant(
-                  null
-                )
-              }
-              className="absolute top-3 right-3 z-20 w-9 h-9 rounded-full bg-black/70 hover:bg-red-500 transition duration-300 flex items-center justify-center"
+              onClick={() => setSelectedRestaurant(null)}
+              className="absolute top-4 right-4 z-20 w-9 h-9 rounded-xl bg-black/55 backdrop-blur-md hover:bg-red-500/25 border border-white/10 hover:border-red-500/40 text-white transition-all duration-300 flex items-center justify-center"
             >
-
-              <FaTimes className="text-white text-sm" />
-
+              <FaTimes className="text-sm" />
             </button>
 
-            {/* IMAGE */}
+            {/* Modal Image Header */}
             <div className="relative w-full h-52">
-
               <Image
                 src={selectedRestaurant.image}
                 alt={selectedRestaurant.name}
@@ -499,149 +263,111 @@ export default function RestaurantsPage() {
                 sizes="100vw"
                 className="object-cover"
               />
-
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0e0e11] to-transparent" />
             </div>
 
-            {/* CONTENT */}
-            <div className="p-5">
-
-              <h2 className="text-xl font-bold mb-5">
+            {/* Modal Info content */}
+            <div className="p-6 -mt-8 relative z-10">
+              <h2 className="text-2xl font-black mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
                 {selectedRestaurant.name}
               </h2>
 
-              {/* MENU SECTION */}
+              {/* Menu listings content */}
               {showMenu ? (
-
                 <div>
-
-                  <h3 className="text-lg font-semibold mb-5 flex items-center gap-3">
-
-                    <FaUtensils className="text-orange-500" />
-
-                    Menu List
-
-                  </h3>
-
-                  <div className="space-y-4">
-
-                    {selectedRestaurant.menu.map(
-                      (
-                        item,
-                        index
-                      ) => (
-
-                        <div
-                          key={index}
-                          className="flex items-center justify-between bg-[#1a1a1a] border border-gray-800 rounded-2xl px-4 py-4"
-                        >
-
-                          <span className="font-medium">
-                            {item.name}
-                          </span>
-
-                          <span className="text-orange-500 font-bold">
-                            {item.price}
-                          </span>
-
-                        </div>
-                      )
-                    )}
-
-                  </div>
-
-                </div>
-
-              ) : (
-
-                <>
-                  <div className="space-y-4 mb-6">
-
-                    <p className="text-gray-300 flex items-center gap-3 text-sm">
-
-                      <FaMapMarkerAlt className="text-orange-500" />
-
-                      {selectedRestaurant.location}
-
-                    </p>
-
-                    <p className="text-gray-300 flex items-center gap-3 text-sm">
-
-                      <FaClock className="text-orange-500" />
-
-                      Opens:{" "}
-                      {selectedRestaurant.openTime}
-
-                    </p>
-
-                    <p className="text-gray-300 flex items-center gap-3 text-sm">
-
-                      <FaClock className="text-orange-500" />
-
-                      Closes:{" "}
-                      {selectedRestaurant.closeTime}
-
-                    </p>
-
-                    <p className="text-gray-300 flex items-center gap-3 text-sm">
-
-                      <FaMotorcycle className="text-orange-500" />
-
-                      {selectedRestaurant.delivery}
-
-                    </p>
-
-                    <p
-                      className={`font-semibold text-sm ${
-                        selectedRestaurant.status ===
-                        "Open"
-                          ? "text-green-500"
-                          : "text-red-500"
-                      }`}
+                  <div className="flex items-center justify-between mb-5">
+                    <h3 className="text-base font-bold flex items-center gap-2.5 text-orange-400">
+                      <FaUtensils />
+                      Menu List
+                    </h3>
+                    <button
+                      onClick={() => setShowMenu(false)}
+                      className="text-xs font-bold text-gray-500 hover:text-white transition-colors"
                     >
-                      {selectedRestaurant.status}
-                    </p>
-
+                      Back to Info
+                    </button>
                   </div>
 
-                  {/* BUTTONS */}
-                  <div className="flex gap-3 mb-5">
+                  <div className="space-y-3 max-h-[280px] overflow-y-auto pr-1">
+                    {selectedRestaurant.menu.map((item, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between bg-white/[0.02] border border-white/[0.06] rounded-xl px-4 py-3.5 hover:border-orange-500/20 transition-all duration-200"
+                      >
+                        <span className="font-semibold text-sm">{item.name}</span>
+                        <span className="text-orange-400 font-extrabold text-sm">{item.price}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="space-y-3 mb-6">
+                    <p className="text-gray-300 flex items-center gap-3 text-sm">
+                      <FaMapMarkerAlt className="text-orange-500 flex-shrink-0" />
+                      <span>{selectedRestaurant.location}</span>
+                    </p>
+                    <p className="text-gray-300 flex items-center gap-3 text-sm">
+                      <FaClock className="text-orange-500 flex-shrink-0" />
+                      <span>Opens: {selectedRestaurant.openTime}</span>
+                    </p>
+                    <p className="text-gray-300 flex items-center gap-3 text-sm">
+                      <FaClock className="text-orange-500 flex-shrink-0" />
+                      <span>Closes: {selectedRestaurant.closeTime}</span>
+                    </p>
+                    <p className="text-gray-300 flex items-center gap-3 text-sm">
+                      <FaMotorcycle className="text-orange-500 flex-shrink-0" />
+                      <span>{selectedRestaurant.delivery}</span>
+                    </p>
+                    <div className="pt-2">
+                      <span
+                        className={`text-xs font-extrabold px-3 py-1 rounded-full border ${
+                          selectedRestaurant.status === "Open"
+                            ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
+                            : "bg-rose-500/10 border-rose-500/30 text-rose-400"
+                        }`}
+                      >
+                        {selectedRestaurant.status}
+                      </span>
+                    </div>
+                  </div>
 
+                  {/* Actions Row */}
+                  <div className="flex gap-3 mb-6">
                     <a
                       href={`https://wa.me/${selectedRestaurant.whatsapp}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 bg-green-600 hover:bg-green-700 transition duration-300 py-2 rounded-xl flex items-center justify-center gap-2 text-sm font-semibold"
+                      className="flex-1 bg-green-600 hover:bg-green-700 transition duration-300 py-3 rounded-xl flex items-center justify-center gap-2 text-xs font-extrabold"
                     >
-
-                      <FaWhatsapp />
-
-                      WhatsApp
-
+                      <FaWhatsapp className="text-sm" />
+                      WhatsApp Order
                     </a>
-
                     <a
                       href={`https://www.google.com/maps?q=${selectedRestaurant.latitude},${selectedRestaurant.longitude}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 bg-blue-600 hover:bg-blue-700 transition duration-300 py-2 rounded-xl flex items-center justify-center gap-2 text-sm font-semibold"
+                      className="flex-1 bg-blue-600 hover:bg-blue-700 transition duration-300 py-3 rounded-xl flex items-center justify-center gap-2 text-xs font-extrabold"
                     >
-
-                      <FaDirections />
-
-                      Direction
-
+                      <FaDirections className="text-sm" />
+                      Get Directions
                     </a>
-
                   </div>
 
-                  <p className="text-gray-400 leading-7 text-sm">
-
+                  <p className="text-gray-400 leading-relaxed text-xs">
                     {selectedRestaurant.description}
-
                   </p>
                 </>
               )}
 
+              {/* View Full Page trigger */}
+              <div className="mt-6 pt-4 border-t border-white/[0.06] text-center">
+                <Link href={`/places/${selectedRestaurant.id}`}>
+                  <span className="text-xs font-bold text-orange-400 hover:text-orange-300 hover:underline cursor-pointer flex items-center justify-center gap-1.5">
+                    Go to Food Joint Details Page &rarr;
+                  </span>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
