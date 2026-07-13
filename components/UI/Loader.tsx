@@ -9,7 +9,7 @@ interface LoaderProps {
 
 export default function Loader({ message = "Loading...", fullScreen = true }: LoaderProps) {
   const containerClass = fullScreen
-    ? "fixed inset-0 bg-[#08080a]/90 backdrop-blur-md z-50 flex flex-col justify-center items-center"
+    ? "fixed inset-0 bg-bg-primary/95 backdrop-blur-md z-50 flex flex-col justify-center items-center"
     : "w-full py-12 flex flex-col justify-center items-center";
 
   return (
@@ -25,7 +25,7 @@ export default function Loader({ message = "Loading...", fullScreen = true }: Lo
         </div>
       </div>
 
-      <h3 className="mt-6 text-lg font-black tracking-tight text-white/95">
+      <h3 className="mt-6 text-lg font-black tracking-tight text-text-primary">
         Food<span className="text-orange-500">Tracker</span>
       </h3>
       <p className="mt-2 text-sm text-gray-500 font-medium animate-pulse">{message}</p>

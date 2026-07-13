@@ -12,7 +12,7 @@ import {
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-[#08080a] text-white overflow-x-hidden relative">
+    <main className="min-h-screen bg-bg-primary text-text-primary overflow-x-hidden relative">
       <div className="absolute top-0 right-1/3 w-[500px] h-[500px] bg-orange-500/5 rounded-full blur-[120px] pointer-events-none -z-10" />
 
       {/* NAVBAR */}
@@ -28,11 +28,11 @@ export default function AboutPage() {
             </span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-black leading-tight mb-8 bg-gradient-to-b from-white via-white to-gray-500 bg-clip-text text-transparent">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-black leading-tight mb-8 text-text-primary">
             About FoodTracker
           </h1>
 
-          <p className="text-gray-400 text-base sm:text-lg md:text-xl leading-relaxed max-w-3xl mx-auto">
+          <p className="text-text-secondary text-base sm:text-lg md:text-xl leading-relaxed max-w-3xl mx-auto">
             FoodTracker bridges the gap between hungry users and local diners. We calculate operating states, map exact walking/driving distances, organize digital menus, and provide direct WhatsApp chat triggers.
           </p>
         </div>
@@ -75,7 +75,7 @@ export default function AboutPage() {
           ].map((item, i) => (
             <div
               key={i}
-              className="bg-white/[0.02] border border-white/[0.06] hover:border-orange-500/30 rounded-[2rem] p-8 hover:-translate-y-1.5 transition-all duration-300 group"
+              className="bg-bg-secondary border border-border-custom hover:border-orange-500/30 rounded-[2rem] p-8 hover:-translate-y-1.5 transition-all duration-300 group"
             >
               <div className="w-14 h-14 rounded-2xl bg-orange-500/10 flex items-center justify-center mb-6 border border-orange-500/20 group-hover:scale-105 transition-transform">
                 {item.icon}
@@ -83,7 +83,7 @@ export default function AboutPage() {
               <h2 className="text-xl font-bold mb-3 group-hover:text-orange-400 transition-colors">
                 {item.title}
               </h2>
-              <p className="text-gray-400 text-sm leading-relaxed">{item.desc}</p>
+              <p className="text-text-secondary text-sm leading-relaxed">{item.desc}</p>
             </div>
           ))}
         </div>
@@ -91,32 +91,32 @@ export default function AboutPage() {
 
       {/* SYSTEM INFO */}
       <section className="px-4 sm:px-6 lg:px-8 pb-24 w-full">
-        <div className="max-w-6xl mx-auto bg-white/[0.02] border border-white/[0.06] rounded-[2.5rem] p-8 sm:p-14 backdrop-blur-xl">
+        <div className="max-w-6xl mx-auto bg-bg-secondary border border-border-custom rounded-[2.5rem] p-8 sm:p-14 backdrop-blur-xl">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* LEFT */}
             <div>
               <h2 className="text-3xl sm:text-4xl font-black mb-6 leading-tight">
                 Modern Food Joint Tracking Architecture
               </h2>
-              <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-8">
+              <p className="text-text-secondary text-sm sm:text-base leading-relaxed mb-8">
                 FoodTracker is architected as a lightweight, zero-latency index. We use modern geolocation, Leaflet maps overlays, local storage states, and dynamic status computation loops to ensure you always have access to up-to-date data.
               </p>
 
               <div className="flex flex-wrap gap-3">
-                <span className="bg-white/[0.03] border border-white/[0.08] text-gray-400 px-4 py-2.5 rounded-xl text-xs font-bold">
+                <span className="bg-bg-primary border border-border-custom text-text-secondary px-4 py-2.5 rounded-xl text-xs font-bold">
                   Client-side Geolocation
                 </span>
-                <span className="bg-white/[0.03] border border-white/[0.08] text-gray-400 px-4 py-2.5 rounded-xl text-xs font-bold">
+                <span className="bg-bg-primary border border-border-custom text-text-secondary px-4 py-2.5 rounded-xl text-xs font-bold">
                   Dynamic Distance Calculations
                 </span>
-                <span className="bg-white/[0.03] border border-white/[0.08] text-gray-400 px-4 py-2.5 rounded-xl text-xs font-bold">
+                <span className="bg-bg-primary border border-border-custom text-text-secondary px-4 py-2.5 rounded-xl text-xs font-bold">
                   Next.js App Router
                 </span>
               </div>
             </div>
 
             {/* RIGHT */}
-            <div className="bg-white/[0.01] border border-white/[0.06] rounded-[2rem] p-8">
+            <div className="bg-bg-primary border border-border-custom rounded-[2rem] p-8">
               <div className="space-y-6">
                 {[
                   { label: "Restaurant Navigation", value: "Active", icon: <FaDirections className="text-orange-500" /> },
@@ -126,11 +126,11 @@ export default function AboutPage() {
                 ].map((row, idx) => (
                   <div
                     key={idx}
-                    className="flex items-center justify-between border-b border-white/[0.05] last:border-none pb-4 last:pb-0"
+                    className="flex items-center justify-between border-b border-border-custom last:border-none pb-4 last:pb-0"
                   >
                     <div className="flex items-center gap-3">
                       {row.icon}
-                      <span className="text-sm font-semibold">{row.label}</span>
+                      <span className="text-sm font-semibold text-text-primary">{row.label}</span>
                     </div>
                     <span className="text-emerald-400 font-bold text-xs bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
                       {row.value}

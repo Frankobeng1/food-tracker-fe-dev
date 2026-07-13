@@ -4,22 +4,16 @@ import { useEffect, useState } from "react";
 import Loader from "@/components/UI/Loader";
 
 export default function PreloaderWrapper({ children }: { children: React.ReactNode }) {
-  const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setMounted(true);
+    // Smooth loader reveal timing
     const timer = setTimeout(() => {
       setLoading(false);
     }, 500);
 
     return () => clearTimeout(timer);
   }, []);
-
-  // Render static loader on server/client mount to prevent HTML layout shift
-  if (!mounted) {
-    return <Loader message="Preparing your experience..." />;
-  }
 
   return (
     <>

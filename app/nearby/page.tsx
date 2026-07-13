@@ -41,6 +41,16 @@ export default function NearbyPage() {
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [restaurants, setRestaurants] = useState<RestaurantWithDistance[]>(baseRestaurants);
   const [loading, setLoading] = useState(true);
+  const [routeDetails, setRouteDetails] = useState<{ distanceKm: number; durationMins: number } | null>(null);
+  
+  const [activeRouteJoint, setActiveRouteJoint] = useState<RestaurantWithDistance | null>(null);
+  const [showDirections, setShowDirections] = useState(false);
+  const [routeSteps, setRouteSteps] = useState<string[]>([]);
+
+  useEffect(() => {
+    setRouteDetails(null);
+    setRouteSteps([]);
+  }, [activeRouteJoint]);
 
   // Toast State
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -246,23 +256,23 @@ export default function NearbyPage() {
   // Block screen if user location is off
   if (!locationAllowed) {
     return (
-      <main className="min-h-screen bg-[#08080a] text-white flex items-center justify-center px-4 relative">
+      <main className="min-h-screen bg-bg-primary text-text-primary flex items-center justify-center px-4 relative">
         <Navbar />
-        <div className="bg-white/[0.02] border border-white/[0.08] rounded-[2.5rem] p-10 max-w-md w-full text-center relative z-10 backdrop-blur-xl">
+        <div className="bg-bg-secondary border border-border-custom rounded-[2.5rem] p-10 max-w-md w-full text-center relative z-10 backdrop-blur-xl">
           <div className="flex justify-center mb-6">
             <div className="bg-orange-500/10 border border-orange-500/20 p-5 rounded-3xl animate-bounce">
               <FaLocationArrow className="text-orange-500 text-4xl" />
             </div>
           </div>
           <h1 className="text-2xl font-black mb-4">Location Services Required</h1>
-          <p className="text-gray-400 leading-relaxed text-sm mb-8">
+          <p className="text-text-secondary leading-relaxed text-sm mb-8">
             {locationError === "denied"
               ? "We need your location permission to sort food joints by distance. Please enable GPS permissions and reload."
               : "Locating you on the map... Please ensure GPS/location access is turned ON."}
           </p>
           <button
             onClick={openLocationSettings}
-            className="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 transition duration-300 py-4 rounded-xl font-bold text-sm shadow-lg shadow-orange-500/15"
+            className="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 transition duration-300 py-4 rounded-xl font-bold text-sm shadow-lg shadow-orange-500/15 cursor-pointer text-white"
           >
             Turn On Location / Reload
           </button>
@@ -275,16 +285,16 @@ export default function NearbyPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#08080a] text-white overflow-x-hidden relative">
+    <main className="min-h-screen bg-bg-primary text-text-primary overflow-x-hidden relative">
       <Navbar />
 
       <div className="pt-36 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {/* Header */}
         <section className="text-center mb-12">
-          <h1 className="text-4xl sm:text-6xl font-black mb-4 tracking-tight bg-gradient-to-r from-white via-white to-gray-500 bg-clip-text text-transparent">
+          <h1 className="text-4xl sm:text-6xl font-black mb-4 tracking-tight text-text-primary">
             Nearby Food Joints
           </h1>
-          <p className="text-gray-400 text-sm sm:text-base max-w-xl mx-auto leading-relaxed mb-6">
+          <p className="text-text-secondary text-sm sm:text-base max-w-xl mx-auto leading-relaxed mb-6">
             Discover and sort food spots and restaurants around you. Calculations are updated in real-time.
           </p>
           <div className="inline-flex items-center gap-2.5 bg-emerald-500/10 border border-emerald-500/30 px-5 py-2.5 rounded-2xl">
@@ -299,48 +309,105 @@ export default function NearbyPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Map Column */}
           <div className="lg:col-span-7 xl:col-span-8">
-            <MapView restaurants={restaurants} userLocation={userLocation} height="520px" />
+            <MapView
+              restaurants={restaurants}
+              userLocation={userLocation}
+              routeTarget={activeRouteJoint ? { lat: activeRouteJoint.lat, lng: activeRouteJoint.lng } : null}
+              onRouteCalculated={(info) => {
+                setRouteDetails(info);
+                setRouteSteps(info.steps);
+              }}
+              height="520px"
+            />
           </div>
 
           {/* List Column */}
           <div className="lg:col-span-5 xl:col-span-4 space-y-4 max-h-[520px] overflow-y-auto pr-1">
-            {restaurants.map((res) => (
-              <div
-                key={res.id}
-                onClick={() => setSelectedRestaurant(res)}
-                className={`bg-white/[0.02] border rounded-[2rem] p-5 cursor-pointer hover:border-orange-500/40 hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between ${
-                  selectedRestaurant?.id === res.id ? "border-orange-500/70 bg-white/[0.04]" : "border-white/[0.06]"
-                }`}
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-lg font-bold leading-tight">{res.name}</h2>
-                    <span
-                      className={`text-[9px] font-black px-2.5 py-1 rounded-full border ${
-                        res.status === "Open"
-                          ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
-                          : "bg-rose-500/10 border-rose-500/30 text-rose-400"
-                      }`}
-                    >
-                      {res.status}
-                    </span>
-                  </div>
-                  <p className="text-xs text-gray-500 mb-4">{res.location}</p>
-                </div>
-
-                <div className="flex items-center justify-between pt-3.5 border-t border-white/[0.06]">
-                  <span className="text-xs font-black text-emerald-400">
-                    {res.calculatedDistance ? `${res.calculatedDistance.toFixed(1)} KM Away` : "Calculating..."}
-                  </span>
+            {showDirections && activeRouteJoint && routeSteps.length > 0 ? (
+              <div className="bg-white/[0.02] border border-white/[0.08] rounded-[2rem] p-6 animate-fade-in-up">
+                <div className="flex items-center justify-between mb-5 pb-3 border-b border-white/[0.06]">
+                  <h3 className="font-extrabold text-base text-orange-400 flex items-center gap-2">
+                    <FaDirections />
+                    Navigation Steps
+                  </h3>
                   <button
-                    type="button"
-                    className="bg-orange-500/10 hover:bg-orange-500 text-orange-400 hover:text-white font-extrabold px-4 py-2 rounded-xl text-xs transition-colors duration-200 border border-orange-500/20"
+                    onClick={() => {
+                      setShowDirections(false);
+                      setActiveRouteJoint(null);
+                    }}
+                    className="text-xs font-bold text-gray-400 hover:text-white transition-colors"
                   >
-                    Quick Info
+                    Clear Route
                   </button>
                 </div>
+                
+                <div className="mb-4 bg-orange-500/10 border border-orange-500/20 rounded-2xl p-4">
+                  <div className="text-sm font-extrabold text-white">{activeRouteJoint.name}</div>
+                  {routeDetails && (
+                    <div className="text-xs text-gray-400 mt-1">
+                      Road: {routeDetails.distanceKm.toFixed(1)} KM | Drive: {Math.round(routeDetails.durationMins)} mins
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-3 max-h-[260px] overflow-y-auto pr-1">
+                  {routeSteps.map((step, idx) => (
+                    <div key={idx} className="flex gap-3.5 items-start py-2.5 border-b border-border-custom last:border-none">
+                      <span className="w-5.5 h-5.5 rounded-lg bg-orange-500/10 border border-orange-500/20 text-orange-500 flex items-center justify-center text-[10px] font-black flex-shrink-0">
+                        {idx + 1}
+                      </span>
+                      <p className="text-text-primary text-xs leading-relaxed">{step}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => setShowDirections(false)}
+                  className="w-full mt-5 bg-bg-primary border border-border-custom hover:bg-bg-secondary hover:border-orange-500/30 transition py-3 rounded-xl text-xs font-bold text-center text-text-primary cursor-pointer"
+                >
+                  Back to Food Joints
+                </button>
               </div>
-            ))}
+            ) : (
+              restaurants.map((res) => (
+                <div
+                  key={res.id}
+                  onClick={() => {
+                    setSelectedRestaurant(res);
+                    setActiveRouteJoint(res);
+                    setShowDirections(false);
+                  }}
+                  className={`bg-bg-secondary border rounded-[2rem] p-5 cursor-pointer hover:border-orange-500/40 hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between ${
+                    activeRouteJoint?.id === res.id ? "border-orange-500/70 bg-bg-secondary/80" : "border-border-custom"
+                  }`}
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <h2 className="text-lg font-bold leading-tight text-text-primary">{res.name}</h2>
+                      <span
+                        className={`text-[9px] font-black px-2.5 py-1 rounded-full border ${
+                          res.status === "Open"
+                            ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
+                            : "bg-rose-500/10 border-rose-500/30 text-rose-400"
+                        }`}
+                      >
+                        {res.status}
+                      </span>
+                    </div>
+                    <p className="text-xs text-text-secondary mb-4">{res.location}</p>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-3.5 border-t border-border-custom">
+                    <span className="text-xs font-black text-emerald-400">
+                      {res.calculatedDistance ? `${res.calculatedDistance.toFixed(1)} KM Away` : "Calculating..."}
+                    </span>
+                    <button className="text-xs font-black text-orange-500 hover:text-orange-400 transition-colors cursor-pointer">
+                      Quick View &rarr;
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>
@@ -348,16 +415,16 @@ export default function NearbyPage() {
       {/* QUICK PREVIEW MODAL */}
       {selectedRestaurant && (
         <div
-          className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 px-4"
+          className="fixed inset-0 bg-black/75 backdrop-blur-md flex items-center justify-center z-50 px-4"
           onClick={() => setSelectedRestaurant(null)}
         >
           <div
-            className="bg-[#0e0e11] border border-white/[0.08] rounded-[2.5rem] max-w-md w-full p-6 overflow-hidden relative shadow-2xl animate-fade-in-up"
+            className="bg-bg-secondary border border-border-custom rounded-[2.5rem] max-w-md w-full p-6 overflow-hidden relative shadow-2xl animate-fade-in-up"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={() => setSelectedRestaurant(null)}
-              className="absolute top-4 right-4 z-20 w-9 h-9 rounded-xl bg-black/55 backdrop-blur-md hover:bg-red-500/25 border border-white/10 hover:border-red-500/40 text-white transition-all duration-300 flex items-center justify-center"
+              className="absolute top-4 right-4 z-20 w-9 h-9 rounded-xl bg-black/55 backdrop-blur-md hover:bg-red-500/25 border border-white/10 hover:border-red-500/40 text-white transition-all duration-300 flex items-center justify-center cursor-pointer"
             >
               <FaTimes className="text-sm" />
             </button>
@@ -366,31 +433,41 @@ export default function NearbyPage() {
               <FaStore className="text-orange-500 text-2xl" />
             </div>
 
-            <h2 className="text-2xl font-black mb-5 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+            <h2 className="text-2xl font-black mb-5 text-text-primary">
               {selectedRestaurant.name}
             </h2>
 
             <div className="space-y-3.5 mb-6">
-              <p className="text-gray-300 flex items-center gap-3 text-sm">
+              <p className="text-text-secondary flex items-center gap-3 text-sm">
                 <FaMapMarkerAlt className="text-orange-500 text-sm flex-shrink-0" />
                 <span>{selectedRestaurant.location}</span>
               </p>
-              <p className="text-gray-300 flex items-center gap-3 text-sm">
+              <p className="text-text-secondary flex items-center gap-3 text-sm">
                 <FaClock className="text-orange-500 text-sm flex-shrink-0" />
                 <span>Opens: {selectedRestaurant.openTime}</span>
               </p>
-              <p className="text-gray-300 flex items-center gap-3 text-sm">
+              <p className="text-text-secondary flex items-center gap-3 text-sm">
                 <FaClock className="text-orange-500 text-sm flex-shrink-0" />
                 <span>Closes: {selectedRestaurant.closeTime}</span>
               </p>
-              <p className="text-gray-300 flex items-center gap-3 text-sm">
+              <p className="text-text-secondary flex items-center gap-3 text-sm">
                 <FaMotorcycle className="text-orange-500 text-sm flex-shrink-0" />
                 <span>{selectedRestaurant.delivery}</span>
               </p>
               <p className="text-emerald-400 font-extrabold text-sm flex items-center gap-2">
                 <FaLocationArrow className="text-xs" />
-                <span>{selectedRestaurant.calculatedDistance?.toFixed(1)} KM Away</span>
+                <span>
+                  {routeDetails
+                    ? `${routeDetails.distanceKm.toFixed(1)} KM (Road Route)`
+                    : `${selectedRestaurant.calculatedDistance?.toFixed(1)} KM Away`}
+                </span>
               </p>
+              {routeDetails && (
+                <p className="text-orange-400 font-extrabold text-sm flex items-center gap-2">
+                  <FaClock className="text-xs" />
+                  <span>Est. Drive Time: {Math.round(routeDetails.durationMins)} mins</span>
+                </p>
+              )}
               <div className="pt-1.5">
                 <span
                   className={`text-xs font-black px-3 py-1.5 rounded-full border ${
@@ -415,15 +492,16 @@ export default function NearbyPage() {
                 <FaWhatsapp className="text-sm" />
                 WhatsApp
               </a>
-              <a
-                href={`https://www.google.com/maps?q=${selectedRestaurant.latitude},${selectedRestaurant.longitude}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-blue-600 hover:bg-blue-700 py-3 rounded-xl flex items-center justify-center gap-2 text-xs font-bold"
+              <button
+                onClick={() => {
+                  setSelectedRestaurant(null);
+                  setShowDirections(true);
+                }}
+                className="bg-blue-600 hover:bg-blue-700 py-3 rounded-xl flex items-center justify-center gap-2 text-xs font-bold text-white transition-colors"
               >
                 <FaDirections className="text-sm" />
                 Directions
-              </a>
+              </button>
             </div>
 
             <p className="text-gray-400 leading-relaxed text-xs">

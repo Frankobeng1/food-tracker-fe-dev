@@ -9,7 +9,7 @@ export default function HomePage() {
   const featuredRestaurants = restaurants.slice(0, 3);
 
   return (
-    <main className="min-h-screen bg-[#08080a] text-white flex flex-col overflow-x-hidden relative">
+    <main className="min-h-screen bg-bg-primary text-text-primary flex flex-col overflow-x-hidden relative">
       {/* Background radial glows */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-orange-500/10 rounded-full blur-[120px] pointer-events-none -z-10" />
       <div className="absolute top-[60vh] right-1/4 w-[600px] h-[600px] bg-amber-500/5 rounded-full blur-[150px] pointer-events-none -z-10" />
@@ -31,25 +31,25 @@ export default function HomePage() {
         </div>
 
         {/* Main Heading */}
-        <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tight leading-tight max-w-5xl mb-6 bg-gradient-to-b from-white via-white to-gray-500 bg-clip-text text-transparent">
+        <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tight leading-tight max-w-5xl mb-6 text-text-primary">
           Track, Discover, and Order from Local Food Joints
         </h1>
 
         {/* Subtitle */}
-        <p className="text-gray-400 text-base sm:text-lg md:text-xl leading-relaxed max-w-3xl mb-12">
+        <p className="text-text-secondary text-base sm:text-lg md:text-xl leading-relaxed max-w-3xl mb-12">
           Experience real-time food joint status updates, live notifications, distance tracking, and direct contact details for the best dining options around you.
         </p>
 
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row items-center gap-4 justify-center">
           <Link href="/restaurants">
-            <button className="group bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-extrabold px-8 py-4.5 rounded-2xl shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 hover:scale-102 active:scale-98 transition-all duration-300 flex items-center gap-3 text-base">
+            <button className="group bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-extrabold px-8 py-4.5 rounded-2xl shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 hover:scale-102 active:scale-98 transition-all duration-300 flex items-center gap-3 text-base cursor-pointer">
               Explore Food Joints
               <FaArrowRight className="group-hover:translate-x-1 transition-transform duration-300" />
             </button>
           </Link>
           <Link href="/nearby">
-            <button className="bg-white/[0.03] border border-white/[0.08] hover:bg-white/[0.06] hover:border-white/[0.15] text-white font-extrabold px-8 py-4.5 rounded-2xl transition-all duration-300 flex items-center gap-3 text-base">
+            <button className="bg-bg-secondary border border-border-custom hover:bg-bg-secondary/80 text-text-primary font-extrabold px-8 py-4.5 rounded-2xl transition-all duration-300 flex items-center gap-3 text-base cursor-pointer">
               <FaMapMarkerAlt className="text-orange-500" />
               Locate Nearby
             </button>
@@ -59,7 +59,7 @@ export default function HomePage() {
 
       {/* Stats Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 bg-white/[0.02] border border-white/[0.06] rounded-[2rem] p-8 backdrop-blur-xl">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 bg-bg-secondary border border-border-custom rounded-[2rem] p-8 backdrop-blur-xl">
           {[
             { value: "100%", label: "Realtime Tracking" },
             { value: "4+", label: "Areas Covered" },
@@ -70,7 +70,7 @@ export default function HomePage() {
               <div className="text-2xl sm:text-4xl font-black bg-gradient-to-r from-orange-400 to-amber-500 bg-clip-text text-transparent mb-1">
                 {stat.value}
               </div>
-              <div className="text-xs sm:text-sm text-gray-500 font-medium uppercase tracking-wider">
+              <div className="text-xs sm:text-sm text-text-secondary font-medium uppercase tracking-wider">
                 {stat.label}
               </div>
             </div>
@@ -84,38 +84,38 @@ export default function HomePage() {
           <h2 className="text-3xl sm:text-5xl font-black tracking-tight mb-4">
             Advanced Food Tracking Features
           </h2>
-          <p className="text-gray-400 max-w-2xl mx-auto text-sm sm:text-base">
+          <p className="text-text-secondary max-w-2xl mx-auto text-sm sm:text-base">
             Everything you need to find the right food at the right time. No guesswork.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-white/[0.02] border border-white/[0.06] hover:border-orange-500/30 rounded-[2.5rem] p-8 hover:-translate-y-1.5 transition-all duration-300 group">
+          <div className="bg-bg-secondary border border-border-custom hover:border-orange-500/30 rounded-[2.5rem] p-8 hover:-translate-y-1.5 transition-all duration-300 group">
             <div className="w-14 h-14 rounded-2xl bg-orange-500/10 flex items-center justify-center mb-6 border border-orange-500/20 group-hover:scale-105 transition-transform">
               <FaMap className="text-orange-500 text-2xl" />
             </div>
             <h3 className="text-xl font-bold mb-3">Live Interactive Map</h3>
-            <p className="text-gray-400 text-sm leading-relaxed">
+            <p className="text-text-secondary text-sm leading-relaxed">
               Locate food joints on our beautiful, custom dark map. Visually track proximity to your current coordinates easily.
             </p>
           </div>
 
-          <div className="bg-white/[0.02] border border-white/[0.06] hover:border-orange-500/30 rounded-[2.5rem] p-8 hover:-translate-y-1.5 transition-all duration-300 group">
+          <div className="bg-bg-secondary border border-border-custom hover:border-orange-500/30 rounded-[2.5rem] p-8 hover:-translate-y-1.5 transition-all duration-300 group">
             <div className="w-14 h-14 rounded-2xl bg-orange-500/10 flex items-center justify-center mb-6 border border-orange-500/20 group-hover:scale-105 transition-transform">
               <FaClock className="text-orange-500 text-2xl" />
             </div>
             <h3 className="text-xl font-bold mb-3">Live Status Check</h3>
-            <p className="text-gray-400 text-sm leading-relaxed">
+            <p className="text-text-secondary text-sm leading-relaxed">
               Know immediately if a food joint is open, closed, or opening soon. Realtime computations keep details up-to-date.
             </p>
           </div>
 
-          <div className="bg-white/[0.02] border border-white/[0.06] hover:border-orange-500/30 rounded-[2.5rem] p-8 hover:-translate-y-1.5 transition-all duration-300 group">
+          <div className="bg-bg-secondary border border-border-custom hover:border-orange-500/30 rounded-[2.5rem] p-8 hover:-translate-y-1.5 transition-all duration-300 group">
             <div className="w-14 h-14 rounded-2xl bg-orange-500/10 flex items-center justify-center mb-6 border border-orange-500/20 group-hover:scale-105 transition-transform">
               <FaBell className="text-orange-500 text-2xl" />
             </div>
             <h3 className="text-xl font-bold mb-3">Instant Notifications</h3>
-            <p className="text-gray-400 text-sm leading-relaxed">
+            <p className="text-text-secondary text-sm leading-relaxed">
               Get notified of opening and closing slots, special announcements, and order status directly inside your browser.
             </p>
           </div>
@@ -123,13 +123,13 @@ export default function HomePage() {
       </section>
 
       {/* Featured Restaurants */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full border-t border-white/[0.04]">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full border-t border-border-custom">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-16 gap-6">
           <div>
             <h2 className="text-3xl sm:text-5xl font-black tracking-tight mb-4">
               Featured Food Places
             </h2>
-            <p className="text-gray-400 max-w-xl text-sm sm:text-base">
+            <p className="text-text-secondary max-w-xl text-sm sm:text-base">
               Handpicked top-rated food joints and restaurants with complete menu catalogs, WhatsApp connectivity, and maps.
             </p>
           </div>
@@ -143,7 +143,7 @@ export default function HomePage() {
           {featuredRestaurants.map((res) => (
             <div
               key={res.id}
-              className="bg-white/[0.02] border border-white/[0.06] hover:border-orange-500/30 rounded-[2.2rem] overflow-hidden hover:-translate-y-2 transition-all duration-300 group flex flex-col h-full"
+              className="bg-bg-secondary border border-border-custom hover:border-orange-500/30 rounded-[2.2rem] overflow-hidden hover:-translate-y-2 transition-all duration-300 group flex flex-col h-full"
             >
               {/* Image */}
               <div className="relative w-full h-56 overflow-hidden">
@@ -172,18 +172,18 @@ export default function HomePage() {
                       {res.name}
                     </h3>
                   </div>
-                  <p className="text-gray-400 text-sm line-clamp-2 mb-6 leading-relaxed">
+                  <p className="text-text-secondary text-sm line-clamp-2 mb-6 leading-relaxed">
                     {res.description}
                   </p>
                 </div>
 
-                <div className="pt-4 border-t border-white/[0.06] flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                <div className="pt-4 border-t border-border-custom flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-xs text-text-secondary">
                     <FaMapMarkerAlt className="text-orange-500" />
                     <span>{res.location}</span>
                   </div>
                   <Link href={`/places/${res.id}`}>
-                    <button className="bg-orange-500/10 hover:bg-orange-500 hover:text-white border border-orange-500/20 text-orange-400 font-extrabold px-4.5 py-2 rounded-xl text-xs transition-all duration-300">
+                    <button className="bg-orange-500/10 hover:bg-orange-500 hover:text-white border border-orange-500/20 text-orange-400 font-extrabold px-4.5 py-2 rounded-xl text-xs transition-all duration-300 cursor-pointer">
                       View details
                     </button>
                   </Link>

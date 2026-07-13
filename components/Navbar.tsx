@@ -3,12 +3,41 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FaBell, FaUtensils } from "react-icons/fa";
+import { FaBell, FaUtensils, FaSun, FaMoon } from "react-icons/fa";
 import { NotificationType } from "@/types/place";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [unreadCount, setUnreadCount] = useState(0);
+  const [theme, setTheme] = useState<"light" | "dark">("dark");
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
+    if (savedTheme) {
+      setTheme(savedTheme);
+      if (savedTheme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    } else {
+      setTheme("dark");
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const nextTheme = theme === "light" ? "dark" : "light";
+    setTheme(nextTheme);
+    if (nextTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    localStorage.setItem("theme", nextTheme);
+    window.dispatchEvent(new Event("themeChanged"));
+  };
 
   useEffect(() => {
     const checkNotifications = () => {
@@ -54,20 +83,20 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="fixed top-0 left-0 w-full bg-[#0a0a0c]/75 backdrop-blur-xl border-b border-white/[0.06] z-50 transition-all duration-300">
+    <nav className="fixed top-0 left-0 w-full bg-bg-navbar backdrop-blur-xl border-b border-border-custom z-50 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
         {/* LOGO */}
         <Link href="/" className="flex items-center gap-3 group">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/20 group-hover:scale-105 transition-transform duration-300">
             <FaUtensils className="text-white text-lg" />
           </div>
-          <h1 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-black text-text-primary tracking-tight">
             Food<span className="text-orange-500">Tracker</span>
           </h1>
         </Link>
 
         {/* NAV LINKS */}
-        <div className="flex items-center gap-2 sm:gap-6">
+        <div className="flex items-center gap-3 sm:gap-6">
           <div className="hidden md:flex items-center gap-1">
             {[
               { name: "Home", path: "/" },
@@ -81,7 +110,7 @@ export default function Navbar() {
                 className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 ${
                   isActive(link.path)
                     ? "text-orange-500 bg-orange-500/[0.06]"
-                    : "text-gray-400 hover:text-white hover:bg-white/[0.04]"
+                    : "text-text-secondary hover:text-text-primary hover:bg-bg-secondary"
                 }`}
               >
                 {link.name}
@@ -90,7 +119,7 @@ export default function Navbar() {
           </div>
 
           {/* MOBILE NAV LINKS (Simplified Row) */}
-          <div className="flex md:hidden items-center gap-3">
+          <div className="flex md:hidden items-center gap-1.5">
             {[
               { name: "Home", path: "/" },
               { name: "Explore", path: "/restaurants" },
@@ -99,16 +128,29 @@ export default function Navbar() {
               <Link
                 key={link.path}
                 href={link.path}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 ${
+                className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 ${
                   isActive(link.path)
                     ? "text-orange-500 bg-orange-500/[0.06]"
-                    : "text-gray-400 hover:text-white"
+                    : "text-text-secondary hover:text-text-primary"
                 }`}
               >
                 {link.name}
               </Link>
             ))}
           </div>
+
+          {/* Theme Toggle Button */}
+          <button
+            onClick={toggleTheme}
+            className="p-2.5 rounded-xl border border-border-custom bg-bg-secondary text-text-secondary hover:text-text-primary transition-all duration-300 flex items-center justify-center cursor-pointer shadow-sm"
+            aria-label="Toggle theme"
+          >
+            {theme === "light" ? (
+              <FaMoon className="text-sm text-indigo-500" />
+            ) : (
+              <FaSun className="text-sm text-amber-400" />
+            )}
+          </button>
 
           {/* NOTIFICATION BUTTON - Disabled for v1
           <Link

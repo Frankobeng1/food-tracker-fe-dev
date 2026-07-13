@@ -18,6 +18,7 @@ import {
 } from "react-icons/fa";
 import { restaurants, Restaurant } from "@/lib/data/restaurants";
 import Loader from "@/components/UI/Loader";
+import { RouteInfo } from "@/components/Map/MapView";
 
 // Dynamic import for map to avoid SSR errors
 const MapView = dynamic(() => import("@/components/Map/MapView"), {
@@ -67,6 +68,24 @@ export default function PlaceDetailPage({ params }: { params: Promise<Params> })
   const resolvedParams = use(params);
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [activeTab, setActiveTab] = useState<"menu" | "info" | "map">("menu");
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [routeInfo, setRouteInfo] = useState<RouteInfo | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.log("Could not obtain user location for details route:", error);
+        }
+      );
+    }
+  }, []);
 
   useEffect(() => {
     const idNum = Number(resolvedParams.id);
@@ -84,7 +103,7 @@ export default function PlaceDetailPage({ params }: { params: Promise<Params> })
   }
 
   return (
-    <main className="min-h-screen bg-[#08080a] text-white overflow-x-hidden relative pb-20">
+    <main className="min-h-screen bg-bg-primary text-text-primary overflow-x-hidden relative pb-20">
       <Navbar />
 
       {/* Hero Cover Header */}
@@ -98,13 +117,13 @@ export default function PlaceDetailPage({ params }: { params: Promise<Params> })
           className="object-cover"
         />
         {/* Dark overlays */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#08080a] via-black/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-bg-primary via-black/40 to-transparent" />
         <div className="absolute inset-0 bg-black/35" />
 
         {/* Back navigation & Float tags */}
         <div className="absolute top-36 left-4 sm:left-8 lg:left-12 z-20 max-w-7xl w-[calc(100%-2rem)] sm:w-[calc(100%-4rem)] flex items-center justify-between">
           <Link href="/restaurants">
-            <button className="flex items-center gap-2 px-4 py-2.5 bg-black/60 border border-white/10 backdrop-blur-md rounded-xl text-xs sm:text-sm font-bold text-gray-300 hover:text-white hover:border-orange-500/40 hover:bg-black/85 transition-all duration-300">
+            <button className="flex items-center gap-2 px-4 py-2.5 bg-black/60 border border-white/10 backdrop-blur-md rounded-xl text-xs sm:text-sm font-bold text-gray-300 hover:text-white hover:border-orange-500/40 hover:bg-black/85 transition-all duration-300 cursor-pointer">
               <FaChevronLeft />
               Back to Food Joints
             </button>
@@ -156,7 +175,7 @@ export default function PlaceDetailPage({ params }: { params: Promise<Params> })
       {/* Main Content Layout */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 relative z-10">
         {/* Tab Headers Row */}
-        <div className="flex border-b border-white/[0.08] mb-10 w-full overflow-x-auto whitespace-nowrap scrollbar-hide">
+        <div className="flex border-b border-border-custom mb-10 w-full overflow-x-auto whitespace-nowrap scrollbar-hide">
           {[
             { id: "menu", label: "Menu List", icon: <FaUtensils /> },
             { id: "map", label: "Location Map", icon: <FaMap /> },
@@ -165,10 +184,10 @@ export default function PlaceDetailPage({ params }: { params: Promise<Params> })
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`flex items-center gap-2.5 px-6 py-4.5 border-b-2 font-extrabold text-sm sm:text-base transition-all duration-300 ${
+              className={`flex items-center gap-2.5 px-6 py-4.5 border-b-2 font-extrabold text-sm sm:text-base transition-all duration-300 cursor-pointer ${
                 activeTab === tab.id
                   ? "border-orange-500 text-orange-500"
-                  : "border-transparent text-gray-500 hover:text-white"
+                  : "border-transparent text-text-secondary hover:text-text-primary"
               }`}
             >
               {tab.icon}
@@ -186,14 +205,14 @@ export default function PlaceDetailPage({ params }: { params: Promise<Params> })
                 {restaurant.menu.map((item, index) => (
                   <div
                     key={index}
-                    className="bg-white/[0.02] border border-white/[0.06] rounded-[2rem] p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 hover:border-orange-500/25 transition-all duration-200"
+                    className="bg-bg-secondary border border-border-custom rounded-[2rem] p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 hover:border-orange-500/25 transition-all duration-200"
                   >
                     <div className="flex items-center gap-4.5">
                       <div className="w-14 h-14 bg-orange-500/10 border border-orange-500/20 rounded-2xl flex items-center justify-center text-orange-500 flex-shrink-0 text-lg">
                         <FaUtensils />
                       </div>
                       <div>
-                        <h3 className="font-extrabold text-base sm:text-lg mb-1">{item.name}</h3>
+                        <h3 className="font-extrabold text-base sm:text-lg mb-1 text-text-primary">{item.name}</h3>
                         <span className="text-orange-400 font-black text-sm">{item.price}</span>
                       </div>
                     </div>
@@ -221,21 +240,60 @@ export default function PlaceDetailPage({ params }: { params: Promise<Params> })
 
           {/* MAP TAB */}
           {activeTab === "map" && (
-            <div className="space-y-6">
-              <div className="bg-white/[0.02] border border-white/[0.06] rounded-[2.5rem] p-4">
-                <MapView restaurants={[restaurant]} userLocation={null} height="400px" />
+            <div className="space-y-6 animate-fade-in">
+              <div className="bg-bg-secondary border border-border-custom rounded-[2.5rem] p-4">
+                <MapView
+                  restaurants={[restaurant]}
+                  userLocation={userLocation}
+                  routeTarget={{ lat: restaurant.lat, lng: restaurant.lng }}
+                  onRouteCalculated={(info) => setRouteInfo(info)}
+                  height="400px"
+                />
               </div>
 
-              <div className="flex items-center justify-between p-6 bg-white/[0.02] border border-white/[0.06] rounded-3xl">
+              {routeInfo && (
+                <div className="grid grid-cols-2 gap-4 bg-bg-secondary border border-border-custom rounded-3xl p-5">
+                  <div className="text-center py-2">
+                    <div className="text-xs text-text-secondary font-bold uppercase tracking-wider mb-1">Road Distance</div>
+                    <div className="text-lg font-black text-orange-400">{routeInfo.distanceKm.toFixed(1)} KM</div>
+                  </div>
+                  <div className="text-center py-2">
+                    <div className="text-xs text-text-secondary font-bold uppercase tracking-wider mb-1">Est. Drive Time</div>
+                    <div className="text-lg font-black text-orange-400">{Math.round(routeInfo.durationMins)} mins</div>
+                  </div>
+                </div>
+              )}
+
+              {/* Turn-by-Turn Navigation Steps */}
+              {routeInfo && routeInfo.steps && routeInfo.steps.length > 0 && (
+                <div className="bg-bg-secondary border border-border-custom rounded-3xl p-6">
+                  <h4 className="font-bold text-base mb-4 flex items-center gap-2.5 text-orange-400">
+                    <FaDirections className="text-lg" />
+                    Turn-by-Turn Navigation Steps
+                  </h4>
+                  <div className="space-y-3.5 max-h-[250px] overflow-y-auto pr-1">
+                    {routeInfo.steps.map((step, idx) => (
+                      <div key={idx} className="flex gap-4 items-start py-2.5 border-b border-border-custom last:border-none">
+                        <span className="w-5.5 h-5.5 rounded-lg bg-orange-500/10 border border-orange-500/20 text-orange-500 flex items-center justify-center text-xs font-black flex-shrink-0">
+                          {idx + 1}
+                        </span>
+                        <p className="text-text-primary text-sm leading-relaxed">{step}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="flex items-center justify-between p-6 bg-bg-secondary border border-border-custom rounded-3xl">
                 <div>
-                  <h4 className="font-bold text-sm sm:text-base mb-1">Need GPS Navigation?</h4>
-                  <p className="text-gray-400 text-xs">Route coordinates on external apps like Google Maps.</p>
+                  <h4 className="font-bold text-sm sm:text-base mb-1 text-text-primary">Need External Navigation?</h4>
+                  <p className="text-text-secondary text-xs">Route coordinates on external apps like Google Maps.</p>
                 </div>
                 <a
                   href={`https://www.google.com/maps?q=${restaurant.latitude},${restaurant.longitude}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-extrabold px-6 py-3 rounded-xl text-xs flex items-center gap-2 transition-colors"
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-extrabold px-6 py-3 rounded-xl text-xs flex items-center gap-2 transition-colors cursor-pointer shadow-md shadow-blue-600/10"
                 >
                   <FaDirections className="text-sm" />
                   Google Maps
@@ -249,28 +307,28 @@ export default function PlaceDetailPage({ params }: { params: Promise<Params> })
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Left Details column */}
               <div className="lg:col-span-2 space-y-6">
-                <div className="bg-white/[0.02] border border-white/[0.06] rounded-[2rem] p-8">
-                  <h3 className="text-xl font-bold mb-4">About the Food Joint</h3>
-                  <p className="text-gray-400 text-sm leading-relaxed mb-6">
+                <div className="bg-bg-secondary border border-border-custom rounded-[2rem] p-8">
+                  <h3 className="text-xl font-bold mb-4 text-text-primary">About the Food Joint</h3>
+                  <p className="text-text-secondary text-sm leading-relaxed mb-6">
                     {restaurant.description}
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="flex items-center gap-3.5 bg-white/[0.02] border border-white/[0.06] rounded-2xl px-5 py-4">
+                    <div className="flex items-center gap-3.5 bg-bg-primary border border-border-custom rounded-2xl px-5 py-4">
                       <FaMotorcycle className="text-orange-500 text-xl" />
                       <div>
-                        <div className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">
+                        <div className="text-[10px] text-text-secondary font-bold uppercase tracking-wider">
                           Services
                         </div>
-                        <div className="text-sm font-semibold">{restaurant.delivery}</div>
+                        <div className="text-sm font-semibold text-text-primary">{restaurant.delivery}</div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3.5 bg-white/[0.02] border border-white/[0.06] rounded-2xl px-5 py-4">
+                    <div className="flex items-center gap-3.5 bg-bg-primary border border-border-custom rounded-2xl px-5 py-4">
                       <FaPhone className="text-orange-500 text-xl" />
                       <div>
-                        <div className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">
+                        <div className="text-[10px] text-text-secondary font-bold uppercase tracking-wider">
                           WhatsApp Call
                         </div>
-                        <div className="text-sm font-semibold">+{restaurant.whatsapp}</div>
+                        <div className="text-sm font-semibold text-text-primary">+{restaurant.whatsapp}</div>
                       </div>
                     </div>
                   </div>
@@ -278,8 +336,8 @@ export default function PlaceDetailPage({ params }: { params: Promise<Params> })
               </div>
 
               {/* Right Hours column */}
-              <div className="bg-white/[0.02] border border-white/[0.06] rounded-[2rem] p-8">
-                <h3 className="text-xl font-bold mb-6">Operating Slots</h3>
+              <div className="bg-bg-secondary border border-border-custom rounded-[2rem] p-8">
+                <h3 className="text-xl font-bold mb-6 text-text-primary">Operating Slots</h3>
                 <div className="space-y-4">
                   {[
                     { label: "Opening Time", value: restaurant.openTime },
@@ -288,9 +346,9 @@ export default function PlaceDetailPage({ params }: { params: Promise<Params> })
                   ].map((row, i) => (
                     <div
                       key={i}
-                      className="flex items-center justify-between border-b border-white/[0.05] last:border-none pb-4 last:pb-0"
+                      className="flex items-center justify-between border-b border-border-custom last:border-none pb-4 last:pb-0"
                     >
-                      <span className="text-gray-400 text-sm font-medium">{row.label}</span>
+                      <span className="text-text-secondary text-sm font-medium">{row.label}</span>
                       {row.highlight ? (
                         <span
                           className={`text-xs font-black px-3 py-1 rounded-full border ${
@@ -302,7 +360,7 @@ export default function PlaceDetailPage({ params }: { params: Promise<Params> })
                           {row.value}
                         </span>
                       ) : (
-                        <span className="font-bold text-sm">{row.value}</span>
+                        <span className="font-bold text-sm text-text-primary">{row.value}</span>
                       )}
                     </div>
                   ))}

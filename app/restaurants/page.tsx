@@ -91,7 +91,7 @@ export default function RestaurantsPage() {
   });
 
   return (
-    <main className="min-h-screen bg-[#08080a] text-white overflow-x-hidden relative">
+    <main className="min-h-screen bg-bg-primary text-text-primary overflow-x-hidden relative">
       <div className="absolute top-0 left-1/3 w-[500px] h-[500px] bg-orange-500/5 rounded-full blur-[120px] pointer-events-none -z-10" />
 
       <Navbar />
@@ -99,25 +99,25 @@ export default function RestaurantsPage() {
       <div className="pt-36 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {/* Hero title */}
         <div className="text-center mb-16">
-          <h1 className="text-4xl sm:text-6xl font-black mb-5 tracking-tight bg-gradient-to-r from-white via-white to-gray-500 bg-clip-text text-transparent">
+          <h1 className="text-4xl sm:text-6xl font-black mb-5 tracking-tight text-text-primary">
             Explore Food Joints
           </h1>
-          <p className="text-gray-400 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+          <p className="text-text-secondary text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
             Discover catalog details, active operating hours, menu lists, and contact options. Filter by categories to find exactly what you crave.
           </p>
         </div>
 
         {/* Filters and Search controls */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12 bg-white/[0.02] border border-white/[0.06] p-6 rounded-[2rem] backdrop-blur-xl">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12 bg-bg-secondary border border-border-custom p-6 rounded-[2rem] backdrop-blur-xl">
           {/* Search bar */}
           <div className="relative w-full md:max-w-md">
-            <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm" />
+            <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary text-sm" />
             <input
               type="text"
               placeholder="Search by name, location, food..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white/[0.03] border border-white/[0.08] hover:border-white/[0.15] focus:border-orange-500/50 rounded-2xl pl-11 pr-4 py-3 text-sm focus:outline-none transition-all duration-300 placeholder-gray-500"
+              className="w-full bg-bg-primary border border-border-custom hover:border-text-secondary focus:border-orange-500/50 rounded-2xl pl-11 pr-4 py-3 text-sm focus:outline-none transition-all duration-300 placeholder-text-secondary text-text-primary"
             />
           </div>
 
@@ -127,10 +127,10 @@ export default function RestaurantsPage() {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-4.5 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-300 border ${
+                className={`px-4.5 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-300 border cursor-pointer ${
                   activeCategory === cat
                     ? "bg-orange-500 border-orange-500 text-white shadow-lg shadow-orange-500/20"
-                    : "bg-white/[0.02] border-white/[0.06] text-gray-400 hover:text-white hover:bg-white/[0.05]"
+                    : "bg-bg-primary border-border-custom text-text-secondary hover:text-text-primary hover:bg-bg-secondary"
                 }`}
               >
                 {cat}
@@ -140,23 +140,23 @@ export default function RestaurantsPage() {
         </div>
 
         {/* Results count info */}
-        <div className="mb-8 text-sm text-gray-400 font-medium">
+        <div className="mb-8 text-sm text-text-secondary font-medium">
           Showing <span className="text-orange-500 font-bold">{filteredRestaurants.length}</span> food joint(s)
         </div>
 
         {/* Grid List */}
         {filteredRestaurants.length === 0 ? (
-          <div className="bg-white/[0.02] border border-white/[0.06] rounded-[2.5rem] p-16 text-center">
-            <FaUtensils className="text-5xl text-gray-600 mx-auto mb-4" />
+          <div className="bg-bg-secondary border border-border-custom rounded-[2.5rem] p-16 text-center">
+            <FaUtensils className="text-5xl text-text-secondary mx-auto mb-4" />
             <h3 className="text-2xl font-bold mb-2">No Food Joints Found</h3>
-            <p className="text-gray-400 text-sm">Try tweaking your search query or choosing another category.</p>
+            <p className="text-text-secondary text-sm">Try tweaking your search query or choosing another category.</p>
           </div>
         ) : (
           <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {filteredRestaurants.map((res) => (
               <div
                 key={res.id}
-                className="bg-white/[0.02] border border-white/[0.06] rounded-[2.2rem] overflow-hidden hover:border-orange-500/40 transition-all duration-300 hover:-translate-y-2 shadow-xl flex flex-col justify-between group h-full"
+                className="bg-bg-secondary border border-border-custom rounded-[2.2rem] overflow-hidden hover:border-orange-500/40 transition-all duration-300 hover:-translate-y-2 shadow-xl flex flex-col justify-between group h-full"
               >
                 {/* Image & Tags header */}
                 <div className="relative w-full h-56 overflow-hidden">
@@ -199,20 +199,20 @@ export default function RestaurantsPage() {
                     <h2 className="text-xl font-bold mb-3 group-hover:text-orange-400 transition-colors">
                       {res.name}
                     </h2>
-                    <p className="text-gray-400 text-xs sm:text-sm line-clamp-2 leading-relaxed mb-4">
+                    <p className="text-text-secondary text-xs sm:text-sm line-clamp-2 leading-relaxed mb-4">
                       {res.description}
                     </p>
 
-                    <div className="flex items-center gap-2.5 text-xs text-gray-500 mb-6">
+                    <div className="flex items-center gap-2.5 text-xs text-text-secondary mb-6">
                       <FaMapMarkerAlt className="text-orange-500 text-sm flex-shrink-0" />
                       <span>{res.location}</span>
                     </div>
                   </div>
 
                   {/* Action Buttons Row */}
-                  <div className="grid grid-cols-2 gap-3 pt-4 border-t border-white/[0.06]">
+                  <div className="grid grid-cols-2 gap-3 pt-4 border-t border-border-custom">
                     <Link href={`/places/${res.id}`} className="w-full">
-                      <button className="w-full bg-orange-500 hover:bg-orange-600 transition-all duration-300 py-3 rounded-xl text-xs font-extrabold flex items-center justify-center gap-1.5 shadow-md shadow-orange-500/10 hover:scale-102">
+                      <button className="w-full bg-orange-500 hover:bg-orange-600 text-white transition-all duration-300 py-3 rounded-xl text-xs font-extrabold flex items-center justify-center gap-1.5 shadow-md shadow-orange-500/10 hover:scale-102 cursor-pointer">
                         <FaInfoCircle />
                         Full Page
                       </button>
@@ -223,7 +223,7 @@ export default function RestaurantsPage() {
                         setSelectedRestaurant(res);
                         setShowMenu(true);
                       }}
-                      className="w-full bg-white/[0.03] border border-white/[0.08] hover:bg-white/[0.06] hover:border-orange-500/30 hover:text-orange-400 transition-all duration-300 py-3 rounded-xl text-xs font-extrabold flex items-center justify-center gap-1.5"
+                      className="w-full bg-bg-primary border border-border-custom hover:bg-bg-secondary hover:border-orange-500/30 hover:text-orange-400 transition-all duration-300 py-3 rounded-xl text-xs font-extrabold flex items-center justify-center gap-1.5 cursor-pointer text-text-primary"
                     >
                       <FaUtensils />
                       Menu List
@@ -239,17 +239,17 @@ export default function RestaurantsPage() {
       {/* QUICK PREVIEW MODAL */}
       {selectedRestaurant && (
         <div
-          className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 px-4"
+          className="fixed inset-0 bg-black/75 backdrop-blur-md flex items-center justify-center z-50 px-4"
           onClick={() => setSelectedRestaurant(null)}
         >
           <div
-            className="bg-[#0e0e11] border border-white/[0.08] rounded-[2.5rem] max-w-md w-full overflow-hidden relative shadow-2xl max-h-[90vh] overflow-y-auto animate-fade-in-up"
+            className="bg-bg-secondary border border-border-custom rounded-[2.5rem] max-w-md w-full overflow-hidden relative shadow-2xl max-h-[90vh] overflow-y-auto animate-fade-in-up"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close Icon */}
             <button
               onClick={() => setSelectedRestaurant(null)}
-              className="absolute top-4 right-4 z-20 w-9 h-9 rounded-xl bg-black/55 backdrop-blur-md hover:bg-red-500/25 border border-white/10 hover:border-red-500/40 text-white transition-all duration-300 flex items-center justify-center"
+              className="absolute top-4 right-4 z-20 w-9 h-9 rounded-xl bg-black/55 backdrop-blur-md hover:bg-red-500/25 border border-white/10 hover:border-red-500/40 text-white transition-all duration-300 flex items-center justify-center cursor-pointer"
             >
               <FaTimes className="text-sm" />
             </button>
@@ -263,12 +263,12 @@ export default function RestaurantsPage() {
                 sizes="100vw"
                 className="object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0e0e11] to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-bg-secondary to-transparent" />
             </div>
 
             {/* Modal Info content */}
             <div className="p-6 -mt-8 relative z-10">
-              <h2 className="text-2xl font-black mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+              <h2 className="text-2xl font-black mb-4 text-text-primary">
                 {selectedRestaurant.name}
               </h2>
 
@@ -282,7 +282,7 @@ export default function RestaurantsPage() {
                     </h3>
                     <button
                       onClick={() => setShowMenu(false)}
-                      className="text-xs font-bold text-gray-500 hover:text-white transition-colors"
+                      className="text-xs font-bold text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
                     >
                       Back to Info
                     </button>
@@ -292,9 +292,9 @@ export default function RestaurantsPage() {
                     {selectedRestaurant.menu.map((item, index) => (
                       <div
                         key={index}
-                        className="flex items-center justify-between bg-white/[0.02] border border-white/[0.06] rounded-xl px-4 py-3.5 hover:border-orange-500/20 transition-all duration-200"
+                        className="flex items-center justify-between bg-bg-primary border border-border-custom rounded-xl px-4 py-3.5 hover:border-orange-500/20 transition-all duration-200"
                       >
-                        <span className="font-semibold text-sm">{item.name}</span>
+                        <span className="font-semibold text-sm text-text-primary">{item.name}</span>
                         <span className="text-orange-400 font-extrabold text-sm">{item.price}</span>
                       </div>
                     ))}
@@ -303,19 +303,19 @@ export default function RestaurantsPage() {
               ) : (
                 <>
                   <div className="space-y-3 mb-6">
-                    <p className="text-gray-300 flex items-center gap-3 text-sm">
+                    <p className="text-text-secondary flex items-center gap-3 text-sm">
                       <FaMapMarkerAlt className="text-orange-500 flex-shrink-0" />
                       <span>{selectedRestaurant.location}</span>
                     </p>
-                    <p className="text-gray-300 flex items-center gap-3 text-sm">
+                    <p className="text-text-secondary flex items-center gap-3 text-sm">
                       <FaClock className="text-orange-500 flex-shrink-0" />
                       <span>Opens: {selectedRestaurant.openTime}</span>
                     </p>
-                    <p className="text-gray-300 flex items-center gap-3 text-sm">
+                    <p className="text-text-secondary flex items-center gap-3 text-sm">
                       <FaClock className="text-orange-500 flex-shrink-0" />
                       <span>Closes: {selectedRestaurant.closeTime}</span>
                     </p>
-                    <p className="text-gray-300 flex items-center gap-3 text-sm">
+                    <p className="text-text-secondary flex items-center gap-3 text-sm">
                       <FaMotorcycle className="text-orange-500 flex-shrink-0" />
                       <span>{selectedRestaurant.delivery}</span>
                     </p>
@@ -338,7 +338,7 @@ export default function RestaurantsPage() {
                       href={`https://wa.me/${selectedRestaurant.whatsapp}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 bg-green-600 hover:bg-green-700 transition duration-300 py-3 rounded-xl flex items-center justify-center gap-2 text-xs font-extrabold"
+                      className="flex-1 bg-green-600 hover:bg-green-700 text-white transition duration-300 py-3 rounded-xl flex items-center justify-center gap-2 text-xs font-extrabold shadow-md shadow-green-600/10"
                     >
                       <FaWhatsapp className="text-sm" />
                       WhatsApp Order
@@ -347,21 +347,21 @@ export default function RestaurantsPage() {
                       href={`https://www.google.com/maps?q=${selectedRestaurant.latitude},${selectedRestaurant.longitude}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 bg-blue-600 hover:bg-blue-700 transition duration-300 py-3 rounded-xl flex items-center justify-center gap-2 text-xs font-extrabold"
+                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white transition duration-300 py-3 rounded-xl flex items-center justify-center gap-2 text-xs font-extrabold shadow-md shadow-blue-600/10"
                     >
                       <FaDirections className="text-sm" />
                       Get Directions
                     </a>
                   </div>
 
-                  <p className="text-gray-400 leading-relaxed text-xs">
+                  <p className="text-text-secondary leading-relaxed text-xs">
                     {selectedRestaurant.description}
                   </p>
                 </>
               )}
 
               {/* View Full Page trigger */}
-              <div className="mt-6 pt-4 border-t border-white/[0.06] text-center">
+              <div className="mt-6 pt-4 border-t border-border-custom text-center">
                 <Link href={`/places/${selectedRestaurant.id}`}>
                   <span className="text-xs font-bold text-orange-400 hover:text-orange-300 hover:underline cursor-pointer flex items-center justify-center gap-1.5">
                     Go to Food Joint Details Page &rarr;
