@@ -121,31 +121,11 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* MOBILE: hamburger + small quick links */}
-          <div className="flex md:hidden items-center gap-2">
-            <div className="flex items-center gap-1.5">
-              {[
-                { name: "Home", path: "/" },
-                { name: "Explore", path: "/restaurants" },
-              ].map((link) => (
-                <Link
-                  key={link.path}
-                  href={link.path}
-                  className={`px-2 py-1 rounded-md text-xs font-bold transition-all duration-300 ${
-                    isActive(link.path)
-                      ? "text-orange-500 bg-orange-500/[0.06]"
-                      : "text-text-secondary hover:text-text-primary"
-                  }`}
-                >
-                  {link.name}
-                </Link>
-              ))}
-            </div>
-
-            {/* mobile menu toggle */}
+          {/* MOBILE: hamburger only (all links moved to slide-down menu) */}
+          <div className="md:hidden flex items-center">
             <button
               onClick={toggleMobile}
-              aria-label="Toggle navigation"
+              aria-label="Open mobile menu"
               className="p-2.5 rounded-xl border border-border-custom bg-bg-secondary text-text-secondary hover:text-text-primary transition-all duration-300 flex items-center justify-center cursor-pointer"
             >
               {mobileOpen ? <FaTimes /> : <FaBars />}
