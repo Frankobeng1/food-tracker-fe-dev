@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FaBell, FaUtensils, FaSun, FaMoon } from "react-icons/fa";
+import { FaBell, FaUtensils, FaSun, FaMoon, FaBars, FaTimes } from "react-icons/fa";
 import { NotificationType } from "@/types/place";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [unreadCount, setUnreadCount] = useState(0);
   const [theme, setTheme] = useState<"light" | "dark">("dark");
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
@@ -38,6 +39,8 @@ export default function Navbar() {
     localStorage.setItem("theme", nextTheme);
     window.dispatchEvent(new Event("themeChanged"));
   };
+
+  const toggleMobile = () => setMobileOpen((s) => !s);
 
   useEffect(() => {
     const checkNotifications = () => {
@@ -118,25 +121,35 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* MOBILE NAV LINKS (Simplified Row) */}
-          <div className="flex md:hidden items-center gap-1.5">
-            {[
-              { name: "Home", path: "/" },
-              { name: "Explore", path: "/restaurants" },
-              { name: "Nearby", path: "/nearby" },
-            ].map((link) => (
-              <Link
-                key={link.path}
-                href={link.path}
-                className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 ${
-                  isActive(link.path)
-                    ? "text-orange-500 bg-orange-500/[0.06]"
-                    : "text-text-secondary hover:text-text-primary"
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
+          {/* MOBILE: hamburger + small quick links */}
+          <div className="flex md:hidden items-center gap-2">
+            <div className="flex items-center gap-1.5">
+              {[
+                { name: "Home", path: "/" },
+                { name: "Explore", path: "/restaurants" },
+              ].map((link) => (
+                <Link
+                  key={link.path}
+                  href={link.path}
+                  className={`px-2 py-1 rounded-md text-xs font-bold transition-all duration-300 ${
+                    isActive(link.path)
+                      ? "text-orange-500 bg-orange-500/[0.06]"
+                      : "text-text-secondary hover:text-text-primary"
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </div>
+
+            {/* mobile menu toggle */}
+            <button
+              onClick={toggleMobile}
+              aria-label="Toggle navigation"
+              className="p-2.5 rounded-xl border border-border-custom bg-bg-secondary text-text-secondary hover:text-text-primary transition-all duration-300 flex items-center justify-center cursor-pointer"
+            >
+              {mobileOpen ? <FaTimes /> : <FaBars />}
+            </button>
           </div>
 
           {/* Theme Toggle Button */}
@@ -172,6 +185,48 @@ export default function Navbar() {
           */}
         </div>
       </div>
+      {/* Mobile slide-down menu */}
+      {mobileOpen && (
+        <div className="md:hidden bg-bg-navbar border-t border-border-custom">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col gap-2">
+            {[
+              { name: "Home", path: "/" },
+              { name: "Food Joints", path: "/restaurants" },
+              { name: "Nearby", path: "/nearby" },
+              { name: "About", path: "/about" },
+            ].map((link) => (
+              <Link
+                key={link.path}
+                href={link.path}
+                onClick={() => setMobileOpen(false)}
+                className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
+                  isActive(link.path)
+                    ? "text-orange-500 bg-orange-500/[0.06]"
+                    : "text-text-secondary hover:text-text-primary hover:bg-bg-secondary"
+                }`}
+              >
+                {link.name}
+              </Link>
+            ))}
+
+            <div className="pt-2 border-t border-border-custom flex items-center justify-between">
+              <button
+                onClick={() => {
+                  toggleTheme();
+                  setMobileOpen(false);
+                }}
+                className="w-full py-2 rounded-lg flex items-center justify-center gap-2 border border-border-custom bg-bg-secondary text-text-secondary hover:text-text-primary"
+              >
+                {theme === "light" ? (
+                  <><FaMoon /> Theme: Light</>
+                ) : (
+                  <><FaSun /> Theme: Dark</>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
