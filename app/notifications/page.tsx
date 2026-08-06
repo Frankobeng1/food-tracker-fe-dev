@@ -44,25 +44,26 @@ const getRestaurantStatus = (openTime: string, closeTime: string) => {
   return now >= openDate && now <= closeDate ? "Open" : "Closed";
 };
 
-const getInitialNotifications = () => {
-  if (typeof window === "undefined") return [];
-  try {
-    const saved = localStorage.getItem("notifications");
-    return saved ? JSON.parse(saved) : [];
-  } catch {
-    return [];
-  }
-};
-
 export default function NotificationsPage() {
-  const [notifications, setNotifications] = useState<NotificationType[]>(getInitialNotifications);
+  const [notifications, setNotifications] = useState<NotificationType[]>([]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    try {
+      const saved = localStorage.getItem("notifications");
+      setNotifications(saved ? JSON.parse(saved) : []);
+    } catch {
+      setNotifications([]);
+    }
+  }, []);
 
   // Sync to LocalStorage and trigger Navbar update
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
     localStorage.setItem("notifications", JSON.stringify(notifications));
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new Event("notificationsUpdated"));
-    }
+    window.dispatchEvent(new Event("notificationsUpdated"));
   }, [notifications]);
 
   // Push notification through browser

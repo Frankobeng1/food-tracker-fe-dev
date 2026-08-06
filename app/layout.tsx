@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "FoodTracker - Local Food Joints",
   description: "Find nearby local food joints, menus, directions, and delivery services.",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover",
 };
 
 import Footer from "@/components/Footer";
@@ -28,6 +29,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
     >
       <head>
@@ -48,7 +50,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col">
+      <body suppressHydrationWarning className="min-h-full flex flex-col">
         <PreloaderWrapper>
           <div className="flex-grow flex flex-col">
             {children}

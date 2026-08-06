@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { use, useEffect, useMemo, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Image from "next/image";
 import Link from "next/link";
@@ -66,10 +66,23 @@ interface Params {
 
 export default function PlaceDetailPage({ params }: { params: Promise<Params> }) {
   const resolvedParams = use(params);
-  const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [activeTab, setActiveTab] = useState<"menu" | "info" | "map">("menu");
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [routeInfo, setRouteInfo] = useState<RouteInfo | null>(null);
+
+  const restaurant = useMemo(() => {
+    const idNum = Number(resolvedParams.id);
+    const matched = restaurants.find((r) => r.id === idNum);
+
+    if (!matched) {
+      return null;
+    }
+
+    return {
+      ...matched,
+      status: getRestaurantStatus(matched.openTime, matched.closeTime),
+    };
+  }, [resolvedParams.id]);
 
   useEffect(() => {
     if (typeof window !== "undefined" && navigator.geolocation) {
@@ -86,17 +99,6 @@ export default function PlaceDetailPage({ params }: { params: Promise<Params> })
       );
     }
   }, []);
-
-  useEffect(() => {
-    const idNum = Number(resolvedParams.id);
-    const matched = restaurants.find((r) => r.id === idNum);
-    if (matched) {
-      setRestaurant({
-        ...matched,
-        status: getRestaurantStatus(matched.openTime, matched.closeTime),
-      });
-    }
-  }, [resolvedParams.id]);
 
   if (!restaurant) {
     return <Loader message="Loading food joint details..." />;

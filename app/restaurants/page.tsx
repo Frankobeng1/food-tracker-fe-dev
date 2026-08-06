@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Image from "next/image";
 import Link from "next/link";
@@ -56,11 +56,15 @@ const getRestaurantStatus = (openTime: string, closeTime: string) => {
 export default function RestaurantsPage() {
   const [selectedRestaurant, setSelectedRestaurant] = useState<Restaurant | null>(null);
   const [showMenu, setShowMenu] = useState(false);
-  const [restaurantData, setRestaurantData] = useState<Restaurant[]>([]);
+  const [restaurantData, setRestaurantData] = useState<Restaurant[]>(() =>
+    restaurants.map((res) => ({
+      ...res,
+      status: getRestaurantStatus(res.openTime, res.closeTime),
+    }))
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
 
-  // Sync statuses on load and on interval
   useEffect(() => {
     const updateRestaurantStatus = () => {
       const updated = restaurants.map((res) => ({
@@ -71,24 +75,28 @@ export default function RestaurantsPage() {
     };
 
     updateRestaurantStatus();
-    const interval = setInterval(updateRestaurantStatus, 60000);
-    return () => clearInterval(interval);
+    const interval = window.setInterval(updateRestaurantStatus, 60000);
+    return () => window.clearInterval(interval);
   }, []);
 
   const categories = ["All", "Local", "Continental", "Fast Food", "Rooftop"];
 
   // Search & Filter computation
-  const filteredRestaurants = restaurantData.filter((res) => {
-    const matchesSearch =
-      res.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      res.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      res.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+  const filteredRestaurants = useMemo(() => {
+    return restaurantData.filter((res) => {
+      const matchesSearch =
+        res.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        res.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        res.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
 
-    const matchesCategory =
-      activeCategory === "All" || res.tags.includes(activeCategory);
+      const matchesCategory =
+        activeCategory === "All" || res.tags.includes(activeCategory);
 
-    return matchesSearch && matchesCategory;
-  });
+      return matchesSearch && matchesCategory;
+    });
+  }, [activeCategory, restaurantData, searchQuery]);
+
+  const filteredRestaurantsList = filteredRestaurants;
 
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary overflow-x-hidden relative">
@@ -141,11 +149,11 @@ export default function RestaurantsPage() {
 
         {/* Results count info */}
         <div className="mb-8 text-sm text-text-secondary font-medium">
-          Showing <span className="text-orange-500 font-bold">{filteredRestaurants.length}</span> food joint(s)
+          Showing <span className="text-orange-500 font-bold">{filteredRestaurantsList.length}</span> food joint(s)
         </div>
 
         {/* Grid List */}
-        {filteredRestaurants.length === 0 ? (
+        {filteredRestaurantsList.length === 0 ? (
           <div className="bg-bg-secondary border border-border-custom rounded-[2.5rem] p-16 text-center">
             <FaUtensils className="text-5xl text-text-secondary mx-auto mb-4" />
             <h3 className="text-2xl font-bold mb-2">No Food Joints Found</h3>
@@ -153,7 +161,7 @@ export default function RestaurantsPage() {
           </div>
         ) : (
           <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {filteredRestaurants.map((res) => (
+            {filteredRestaurantsList.map((res) => (
               <div
                 key={res.id}
                 className="bg-bg-secondary border border-border-custom rounded-[2.2rem] overflow-hidden hover:border-orange-500/40 transition-all duration-300 hover:-translate-y-2 shadow-xl flex flex-col justify-between group h-full"
@@ -211,11 +219,12 @@ export default function RestaurantsPage() {
 
                   {/* Action Buttons Row */}
                   <div className="grid grid-cols-2 gap-3 pt-4 border-t border-border-custom">
-                    <Link href={`/places/${res.id}`} className="w-full">
-                      <button className="w-full bg-orange-500 hover:bg-orange-600 text-white transition-all duration-300 py-3 rounded-xl text-xs font-extrabold flex items-center justify-center gap-1.5 shadow-md shadow-orange-500/10 hover:scale-102 cursor-pointer">
-                        <FaInfoCircle />
-                        Full Page
-                      </button>
+                    <Link
+                      href={`/places/${res.id}`}
+                      className="w-full bg-orange-500 hover:bg-orange-600 text-white transition-all duration-300 py-3 rounded-xl text-xs font-extrabold flex items-center justify-center gap-1.5 shadow-md shadow-orange-500/10 hover:scale-102 cursor-pointer"
+                    >
+                      <FaInfoCircle />
+                      Full Page
                     </Link>
 
                     <button

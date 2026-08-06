@@ -13,7 +13,6 @@ import {
   FaWhatsapp,
   FaMotorcycle,
   FaDirections,
-  FaBell,
   FaStore,
 } from "react-icons/fa";
 import { restaurants as baseRestaurants, Restaurant } from "@/lib/data/restaurants";
@@ -47,10 +46,23 @@ export default function NearbyPage() {
   const [showDirections, setShowDirections] = useState(false);
   const [routeSteps, setRouteSteps] = useState<string[]>([]);
 
-  useEffect(() => {
+  const selectRouteTarget = (restaurant: RestaurantWithDistance, shouldShowDirections = true) => {
+    setActiveRouteJoint(restaurant);
+    setShowDirections(shouldShowDirections);
     setRouteDetails(null);
     setRouteSteps([]);
-  }, [activeRouteJoint]);
+  };
+
+  const openQuickView = (restaurant: RestaurantWithDistance) => {
+    setSelectedRestaurant(restaurant);
+  };
+
+  const clearRoute = () => {
+    setShowDirections(false);
+    setActiveRouteJoint(null);
+    setRouteDetails(null);
+    setRouteSteps([]);
+  };
 
   // Toast State
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -107,15 +119,6 @@ export default function NearbyPage() {
       }
 
       return now >= openDate && now <= closeDate ? "Open" : "Closed";
-    };
-
-    const sendSystemNotification = (title: string, body: string) => {
-      if (typeof window !== "undefined" && "Notification" in window && Notification.permission === "granted") {
-        new Notification(title, {
-          body,
-          icon: "/favicon.ico",
-        });
-      }
     };
 
     const initLocation = async () => {
@@ -207,6 +210,10 @@ export default function NearbyPage() {
             .sort((a, b) => (a.calculatedDistance || 0) - (b.calculatedDistance || 0));
 
           setRestaurants(sorted);
+
+          if (!activeRouteJoint && sorted[0]) {
+            selectRouteTarget(sorted[0], true);
+          }
         },
         (error) => {
           console.error(error);
@@ -237,7 +244,7 @@ export default function NearbyPage() {
         navigator.geolocation.clearWatch(watchId);
       }
     };
-  }, []);
+  }, [activeRouteJoint]);
 
   const openLocationSettings = () => {
     showToast("Please toggle location settings in browser settings.", "info");
@@ -288,27 +295,27 @@ export default function NearbyPage() {
     <main className="min-h-screen bg-bg-primary text-text-primary overflow-x-hidden relative">
       <Navbar />
 
-      <div className="pt-36 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div className="pt-28 sm:pt-36 pb-20 sm:pb-24 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {/* Header */}
-        <section className="text-center mb-12">
-          <h1 className="text-4xl sm:text-6xl font-black mb-4 tracking-tight text-text-primary">
+        <section className="text-center mb-8 sm:mb-12">
+          <h1 className="text-3xl sm:text-4xl lg:text-6xl font-black mb-3 sm:mb-4 tracking-tight text-text-primary">
             Nearby Food Joints
           </h1>
-          <p className="text-text-secondary text-sm sm:text-base max-w-xl mx-auto leading-relaxed mb-6">
+          <p className="text-text-secondary text-sm sm:text-base max-w-xl mx-auto leading-relaxed mb-4 sm:mb-6 px-1">
             Discover and sort food spots and restaurants around you. Calculations are updated in real-time.
           </p>
-          <div className="inline-flex items-center gap-2.5 bg-emerald-500/10 border border-emerald-500/30 px-5 py-2.5 rounded-2xl">
-            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-xs sm:text-sm font-bold text-emerald-400">
+          <div className="inline-flex items-center gap-2.5 bg-emerald-500/10 border border-emerald-500/30 px-3 sm:px-5 py-2 sm:py-2.5 rounded-2xl max-w-full">
+            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse flex-shrink-0" />
+            <span className="text-[11px] sm:text-sm font-bold text-emerald-400 break-words">
               Tracking Area: <span className="underline">{userArea}</span>
             </span>
           </div>
         </section>
 
         {/* Side-by-side Map and List layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-8 items-start">
           {/* Map Column */}
-          <div className="lg:col-span-7 xl:col-span-8">
+          <div className="lg:col-span-7 xl:col-span-8 order-2 lg:order-1">
             <MapView
               restaurants={restaurants}
               userLocation={userLocation}
@@ -322,19 +329,16 @@ export default function NearbyPage() {
           </div>
 
           {/* List Column */}
-          <div className="lg:col-span-5 xl:col-span-4 space-y-4 max-h-[520px] overflow-y-auto pr-1">
+          <div className="lg:col-span-5 xl:col-span-4 space-y-3 sm:space-y-4 max-h-none lg:max-h-[520px] overflow-y-visible lg:overflow-y-auto pr-0 lg:pr-1 order-1 lg:order-2">
             {showDirections && activeRouteJoint && routeSteps.length > 0 ? (
-              <div className="bg-white/[0.02] border border-white/[0.08] rounded-[2rem] p-6 animate-fade-in-up">
+              <div className="bg-white/[0.02] border border-white/[0.08] rounded-[1.5rem] sm:rounded-[2rem] p-4 sm:p-6 animate-fade-in-up">
                 <div className="flex items-center justify-between mb-5 pb-3 border-b border-white/[0.06]">
                   <h3 className="font-extrabold text-base text-orange-400 flex items-center gap-2">
                     <FaDirections />
                     Navigation Steps
                   </h3>
                   <button
-                    onClick={() => {
-                      setShowDirections(false);
-                      setActiveRouteJoint(null);
-                    }}
+                    onClick={clearRoute}
                     className="text-xs font-bold text-gray-400 hover:text-white transition-colors"
                   >
                     Clear Route
@@ -350,7 +354,7 @@ export default function NearbyPage() {
                   )}
                 </div>
 
-                <div className="space-y-3 max-h-[260px] overflow-y-auto pr-1">
+                <div className="space-y-3 max-h-[220px] sm:max-h-[260px] overflow-y-auto pr-1">
                   {routeSteps.map((step, idx) => (
                     <div key={idx} className="flex gap-3.5 items-start py-2.5 border-b border-border-custom last:border-none">
                       <span className="w-5.5 h-5.5 rounded-lg bg-orange-500/10 border border-orange-500/20 text-orange-500 flex items-center justify-center text-[10px] font-black flex-shrink-0">
@@ -372,18 +376,14 @@ export default function NearbyPage() {
               restaurants.map((res) => (
                 <div
                   key={res.id}
-                  onClick={() => {
-                    setSelectedRestaurant(res);
-                    setActiveRouteJoint(res);
-                    setShowDirections(false);
-                  }}
-                  className={`bg-bg-secondary border rounded-[2rem] p-5 cursor-pointer hover:border-orange-500/40 hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between ${
+                  onClick={() => selectRouteTarget(res, true)}
+                  className={`bg-bg-secondary border rounded-[1.4rem] sm:rounded-[2rem] p-4 sm:p-5 hover:border-orange-500/40 hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between cursor-pointer ${
                     activeRouteJoint?.id === res.id ? "border-orange-500/70 bg-bg-secondary/80" : "border-border-custom"
                   }`}
                 >
                   <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <h2 className="text-lg font-bold leading-tight text-text-primary">{res.name}</h2>
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <h2 className="text-base sm:text-lg font-bold leading-tight text-text-primary">{res.name}</h2>
                       <span
                         className={`text-[9px] font-black px-2.5 py-1 rounded-full border ${
                           res.status === "Open"
@@ -397,11 +397,14 @@ export default function NearbyPage() {
                     <p className="text-xs text-text-secondary mb-4">{res.location}</p>
                   </div>
 
-                  <div className="flex items-center justify-between pt-3.5 border-t border-border-custom">
-                    <span className="text-xs font-black text-emerald-400">
+                  <div className="flex items-center justify-between gap-2 pt-3.5 border-t border-border-custom">
+                    <span className="text-[11px] sm:text-xs font-black text-emerald-400">
                       {res.calculatedDistance ? `${res.calculatedDistance.toFixed(1)} KM Away` : "Calculating..."}
                     </span>
-                    <button className="text-xs font-black text-orange-500 hover:text-orange-400 transition-colors cursor-pointer">
+                    <button
+                      onClick={() => openQuickView(res)}
+                      className="text-[11px] sm:text-xs font-black text-orange-500 hover:text-orange-400 transition-colors cursor-pointer"
+                    >
                       Quick View &rarr;
                     </button>
                   </div>
